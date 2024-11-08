@@ -97,6 +97,12 @@
 		<Unit filename="C:/Users/antoi/CLionProjects/Projet_rover/Bases_prof/moves.h">
 			<Option target="untitled1"/>
 		</Unit>
+		<Unit filename="C:/Users/antoi/CLionProjects/Projet_rover/Bases_prof/node.c">
+			<Option target="untitled1"/>
+		</Unit>
+		<Unit filename="C:/Users/antoi/CLionProjects/Projet_rover/Bases_prof/node.h">
+			<Option target="untitled1"/>
+		</Unit>
 		<Unit filename="C:/Users/antoi/CLionProjects/Projet_rover/Bases_prof/queue.c">
 			<Option target="untitled1"/>
 		</Unit>
@@ -107,6 +113,9 @@
 			<Option target="untitled1"/>
 		</Unit>
 		<Unit filename="C:/Users/antoi/CLionProjects/Projet_rover/Bases_prof/stack.h">
+			<Option target="untitled1"/>
+		</Unit>
+		<Unit filename="C:/Users/antoi/CLionProjects/Projet_rover/Bases_prof/tree.c">
 			<Option target="untitled1"/>
 		</Unit>
 		<Unit filename="C:/Users/antoi/CLionProjects/Projet_rover/Bases_prof/tree.h">

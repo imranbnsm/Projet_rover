@@ -4,22 +4,17 @@
 
 #ifndef PROJET_ROVER_TREE_H
 #define PROJET_ROVER_TREE_H
-struct s_node
-{
-    int value;
-    struct s_node   *left, *right;
-    int depth;
-};
-typedef struct s_node *node;
+#include "node.h"
 
 struct s_tree {
     node root;
+    int height;
 };
 typedef struct s_tree *tree;
 
 tree create_tree();
-void add_node(int val);
-node search_node(int val);
-node delete_node(int val);
+void add_node(tree t,int* list_moves, int length, int val);
+int search_node(tree t, int val);
+void display_tree(tree t);
 
 #endif //PROJET_ROVER_TREE_H
