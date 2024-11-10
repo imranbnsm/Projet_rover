@@ -19,7 +19,8 @@ t_node *searchNode(t_tree tree, t_localisation loc);
 void displayTree(t_node *node, int level);
 void freeTree(t_tree *tree);
 t_tree insertInTree(t_tree tree, t_node *newNode);
-
+t_node *SearchLeafMinAuxiliaire(t_node *node, t_localisation loc, t_node **min_cost_node, int *min_cost);
+t_node *SearchLeafMin(t_tree tree, t_localisation loc);
 
 
 
