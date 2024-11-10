@@ -17,4 +17,9 @@ add_executable(untitled1 main.c
         tree.h
         tree.c
         node.h
-        node.c)
+        node.c
+        node2.h
+        node2.c
+        tree2.h
+        tree2.c
+)
