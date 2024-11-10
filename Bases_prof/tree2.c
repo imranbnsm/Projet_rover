@@ -68,8 +68,8 @@ void displayTree(t_node *root, int depth)
 
 // recherche d'une feuille de valeur minimale 
 
-/* On crée une fonction auxilaire pour pouvoir faire une fonction recursive, qui prendre en argument le noeud où on se situe, la position de la station,
-le noeud avec le coup minimum actuel, et sa valeur. */
+/* On crée une fonction auxilaire pour pouvoir faire une fonction recursive, qui prendra en argument le noeud où on se situe, la position de la station,
+le noeud avec le coup minimum actuel et sa valeur. */
 t_node *SearchLeafMinAuxiliaire(t_node *node, t_localisation loc, t_node **min_cost_node, int *min_cost) {
     if (node == NULL) return NULL;
 
@@ -98,4 +98,6 @@ t_node *SearchLeafMin(t_tree tree, t_localisation loc) {
 }
 
 
+// chemin depuis la racine vers cette feuille.
 
+t_node** CheminRacineFeuille(t_tree tree, t_node* node);
