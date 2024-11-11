@@ -44,7 +44,7 @@ void insertInTree(t_tree *tree, const int* list_moves, int length_moves, t_map m
     t_move moves[] = { F_10, F_20, F_30, B_10, T_LEFT, T_RIGHT, U_TURN};
     for (int i=0;i<length_moves-1;i++){
         nd=nd->children[list_moves[i]];    // boucle pour acceder au parent du dernier noeud en fonction des mouvements
-                                           // on va jusqu'à lenght_moves-2, le list_moves[lenght_moves-1] sera l qui sera attribue à notre nouveau noeud
+                                           // on va jusqu'à lenght_moves-2, le list_moves[lenght_moves-1] sera attribue à notre nouveau noeud
     }
     t_localisation new_pos = move(nd->loc,moves[list_moves[length_moves-1]]);    // On trouve la nouvelle localisation du dernier noeud en fonction de 
                                                                                  // la localisation du noeud parent et du mouvement qui devra être effectué
@@ -64,15 +64,17 @@ void completeTree (t_tree *tree, t_map map){
     t_node *nd=tree->root;
     t_move moves[] = { F_10, F_20, F_30, B_10, T_LEFT, T_RIGHT, U_TURN};
     int j=0;
-    for (int i=0;i<9;i++){
-        for (int l=0;l<9-nd->depth;l++) {
+    for (int i=0;i<9;i++){ // 9 mouvements à effectuer
+        for (int l=0;l<9-nd->depth;l++) { //  
             if (nd->depth == 0) {
                 int list_moves[] = {l};
-                insertInTree(tree, list_moves, 1, map);
-            } else if (moves[nd->move_interdit[j]] != moves[l] && moves[l] != nd->move) {
-                int list_moves[nd->depth + 2];
+                insertInTree(tree, list_moves, 1, map); // On crée les premiers fils de la racine
+                // en mettant {l}, cela nous permet de faire des fils pour chaque types de mouvements differents.
+                // si l = 7 ou 8 ça fait quoi ?
+            } else if (moves[nd->move_interdit[j]] != moves[l] && moves[l] != nd->move) { // on verifie que le mouvement du nouveau noeud est different des precedents
+                int list_moves[nd->depth + 2]; // ? 
                 for (int k = 0; k < nd->depth; k++) {
-                    list_moves[k] = nd->move_interdit[k];
+                    list_moves[k] = nd->move_interdit[k]; // les mouvements de K deviennent des mouvements interdits.
                 }
                 list_moves[nd->depth] = (int) nd->move;
                 list_moves[nd->depth + 1] = l;
