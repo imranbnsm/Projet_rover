@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "map.h"
-#include "tree2.h"
+#include "tree.h"
 
 int main() {
     t_map map;

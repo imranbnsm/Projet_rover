@@ -14,12 +14,8 @@ add_executable(untitled1 main.c
         queue.h
         stack.c
         stack.h
-        tree.h
-        tree.c
         node.h
         node.c
-        node2.h
-        node2.c
-        tree2.h
-        tree2.c
+        tree.h
+        tree.c
 )
