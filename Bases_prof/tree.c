@@ -43,16 +43,18 @@ void insertInTree(t_tree *tree, const int* list_moves, int length_moves, t_map m
 {   t_node *nd=tree->root;
     t_move moves[] = { F_10, F_20, F_30, B_10, T_LEFT, T_RIGHT, U_TURN};
     for (int i=0;i<length_moves-1;i++){
-        nd=nd->children[list_moves[i]];    // boucle pour acceder au dernieur noeud en fonction des mouvements
+        nd=nd->children[list_moves[i]];    // boucle pour acceder au parent du dernier noeud en fonction des mouvements
+                                           // on va jusqu'à lenght_moves-2, le list_moves[lenght_moves-1] sera l qui sera attribue à notre nouveau noeud
     }
-    t_localisation new_pos = move(nd->loc,moves[list_moves[length_moves-1]]);    // On trouve la nouvelle localisation
+    t_localisation new_pos = move(nd->loc,moves[list_moves[length_moves-1]]);    // On trouve la nouvelle localisation du dernier noeud en fonction de 
+                                                                                 // la localisation du noeud parent et du mouvement qui devra être effectué
     if (isValidLocalisation(new_pos.pos,map.x_max,map.y_max)){
         int cost=map.costs[new_pos.pos.y][new_pos.pos.x];    // Verifier si c'est pas l'inverse pour les pos (d'abord x puis y)
         t_node *nd_child= createNode(new_pos, cost, nd->depth+1);
         addChild(nd, nd_child);
         nd_child->move=moves[list_moves[length_moves-1]];
         for(int j=0;j<length_moves;j++){
-            nd_child->move_interdit[j]=list_moves[j];
+            nd_child->move_interdit[j]=list_moves[j]; // Pourquoi on les interdits, on a le droit de reutiliser les mêmes mouvements normalements.
         }
     } else {
         //fin de partie
