@@ -10,13 +10,13 @@
 
 typedef struct s_node
 {
-    t_localisation loc;  // Localisation du robot
+    t_localisation loc;  // Localisation du robot (position + orientation)
     int cost;            // Coût de cette position
     int depth;           // Profondeur dans l'arbre
     struct s_node **children; // Tableau dynamique de fils
     int num_children;    // Nombre de fils
     int* move_interdit; // Liste des mouvements parents du noeud
-    t_move move;
+    t_move move;        // les 9 types de mouvements
 } t_node;
 
 t_node *createNode(t_localisation loc, int cost, int depth);
