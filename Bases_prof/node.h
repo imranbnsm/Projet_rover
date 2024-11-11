@@ -16,7 +16,7 @@ typedef struct s_node
     struct s_node **children; // Tableau dynamique de fils
     int num_children;    // Nombre de fils
     int* move_interdit; // Liste des mouvements parents du noeud
-    t_move move;        // les 9 types de mouvements
+    t_move move;        // un des 9 types de mouvements
 } t_node;
 
 t_node *createNode(t_localisation loc, int cost, int depth);
