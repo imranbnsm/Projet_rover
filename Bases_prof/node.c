@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include "node.h"
 
-t_node *createNode(t_localisation loc, int cost, int depth)
+t_node *createNode(t_localisation loc, int cost, int depth) // faut peut être intialise le champ move.
 {
     t_node *node = (t_node *)malloc(sizeof(t_node));
     node->loc = loc;
