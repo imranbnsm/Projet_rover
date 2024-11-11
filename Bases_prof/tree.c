@@ -43,11 +43,11 @@ void insertInTree(t_tree *tree, const int* list_moves, int length_moves, t_map m
 {   t_node *nd=tree->root;
     t_move moves[] = { F_10, F_20, F_30, B_10, T_LEFT, T_RIGHT, U_TURN};
     for (int i=0;i<length_moves-1;i++){
-        nd=nd->children[list_moves[i]];
+        nd=nd->children[list_moves[i]];    // boucle pour acceder au dernieur noeud en fonction des mouvements
     }
-    t_localisation new_pos = move(nd->loc,moves[list_moves[length_moves-1]]);
+    t_localisation new_pos = move(nd->loc,moves[list_moves[length_moves-1]]);    // On trouve la nouvelle localisation
     if (isValidLocalisation(new_pos.pos,map.x_max,map.y_max)){
-        int cost=map.costs[new_pos.pos.y][new_pos.pos.x];
+        int cost=map.costs[new_pos.pos.y][new_pos.pos.x];    // Verifier si c'est pas l'inverse pour les pos (d'abord x puis y)
         t_node *nd_child= createNode(new_pos, cost, nd->depth+1);
         addChild(nd, nd_child);
         nd_child->move=moves[list_moves[length_moves-1]];
