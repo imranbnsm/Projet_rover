@@ -8,7 +8,7 @@
 struct s_node
 {
     int value;
-    struct s_node** enfants;
+    struct s_node** children;
     int depth;
     int* move_interdit;
     t_move move;

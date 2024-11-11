@@ -10,10 +10,12 @@ tree create_tree(){
     tree t;
     t->root= create_node(0,0);
     t->height=5;
+    node tmp=t->root;
     for (int i=0;i<5;i++){
         for (int j=0;j<9-i;j++){
-            t->root->enfants[j]=create_node(0,i);
+            t->root->children[j]=create_node(0,i);
         }
+
     }
     return t;
 }
@@ -26,9 +28,9 @@ void add_node(tree t,int* list_moves, int length, int val){
         return;
     }
     node nd=t->root;
-    t_move moves[]=[(t_move) F_10,(t_move) F_20,(t_move) F_30,(t_move) B_10,(t_move) T_LEFT,(t_move) T_RIGHT,(t_move) U_TURN];
+    t_move moves[] = { F_10, F_20, F_30, B_10, T_LEFT, T_RIGHT, U_TURN};
     for (int i=0;i<length;i++){
-        nd=nd->enfants[list_moves[i]];
+        nd=nd->children[list_moves[i]];
     }
     nd->value=val;
     nd->move=moves[list_moves[length-1]];
@@ -38,9 +40,23 @@ void add_node(tree t,int* list_moves, int length, int val){
 }
 
 void display_tree(tree t){
-    printf("")
+    if (t->root == NULL)
+        return;
+    printf("aaaaaaaaaaaaaaa");
+    for (int i = 0; i < t->height; i++)
+    {
+        printf("  ");
+    }
 
+    printf("Cost: %d, Depth: %d\n", t->root->value, t->root->depth);
 
-
+    for (int i = 0; i < 9-t->root->depth; i++)
+    {
+        t->root=t->root->children[i];
+        t->height--;
+        display_tree(t);
+    }
 }
+
+//void reset_tree''
 

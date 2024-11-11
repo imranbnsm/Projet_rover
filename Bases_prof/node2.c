@@ -14,6 +14,7 @@ t_node *createNode(t_localisation loc, int cost, int depth)
     node->depth = depth;
     node->children = NULL;   // Pas d'enfants au début
     node->num_children = 0;   // Pas d'enfants
+    node->move_interdit= malloc(depth*sizeof(int));
     return node;
 }
 
@@ -26,5 +27,5 @@ void addChild(t_node *parent, t_node *child)
 
 void displayNode(t_node *node)
 {
-    printf("Position: (%d, %d), Cost: %d, Depth: %d\n", node->loc.pos.x, node->loc.pos.y, node->cost, node->depth);
+    printf("Position: (%d, %d), Cost: %d, Depth: %d\n",node->loc.pos.x, node->loc.pos.y, node->cost, node->depth);
 }

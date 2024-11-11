@@ -6,8 +6,7 @@
 #define UNTITLED1_NODE2_H
 
 #include "loc.h"
-
-#include "loc.h"
+#include "moves.h"
 
 typedef struct s_node
 {
@@ -16,6 +15,8 @@ typedef struct s_node
     int depth;           // Profondeur dans l'arbre
     struct s_node **children; // Tableau dynamique de fils
     int num_children;    // Nombre de fils
+    int* move_interdit; // Liste des mouvements parents du noeud
+    t_move move;
 } t_node;
 
 t_node *createNode(t_localisation loc, int cost, int depth);
