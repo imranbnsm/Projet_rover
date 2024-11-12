@@ -123,10 +123,10 @@ void displayTree(t_node *root, int depth)
 
 // recherche d'une feuille de valeur minimale 
 
-/* On crée une fonction auxilaire pour pouvoir faire une fonction recursive, qui prendra en argument le noeud où on se situe, la position de la station,
+/* On crée une fonction auxiliaire pour pouvoir faire une fonction recursive, qui prendra en argument le noeud où on se situe, la position de la station,
 le noeud avec le coup minimum actuel et sa valeur. */
 
-t_node *SearchLeafMinAuxiliaire(t_node *node, t_node **min_cost_node, int *min_cost) {
+void *SearchLeafMinAuxiliaire(t_node *node, t_node **min_cost_node, int *min_cost) {
     if (node == NULL) return NULL;
 
     // Vérifie si le noeud actuel a un coût inférieur au minimum actuel.
@@ -142,7 +142,6 @@ t_node *SearchLeafMinAuxiliaire(t_node *node, t_node **min_cost_node, int *min_c
         SearchLeafMinAuxiliaire(node->children[i], min_cost_node, min_cost);    // On appelle la fonction recursivement pour trouver le noeud avec le coût le plus bas.
     }
 
-    return *min_cost_node;
 }
 
 /* On va creer une fonction qui va nous donner la feuille avec la valeur la plus petite, pour faire ça on va prendre en argument l'arbre en question, 
@@ -154,7 +153,8 @@ t_node *SearchLeafMin(t_tree tree) {
 
     // Appelle de la fonction auxiliaire pour rechercher le noeud feuille avec le coût minimum
     
-    return SearchLeafMinAuxiliaire(tree.root, &min_cost_node, &min_cost);
+   SearchLeafMinAuxiliaire(tree.root, &min_cost_node, &min_cost); 
+   return min_cost_node;
 }
 
 
