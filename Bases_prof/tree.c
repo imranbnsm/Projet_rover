@@ -126,7 +126,7 @@ void displayTree(t_node *root, int depth)
 /* On crée une fonction auxiliaire pour pouvoir faire une fonction recursive, qui prendra en argument le noeud où on se situe, la position de la station,
 le noeud avec le coup minimum actuel et sa valeur. */
 
-void *SearchLeafMinAuxiliaire(t_node *node, t_node **min_cost_node, int *min_cost) {
+void SearchLeafMinAuxiliaire(t_node *node, t_node **min_cost_node, int *min_cost) {
     if (node == NULL) return NULL;
 
     // Vérifie si le noeud actuel a un coût inférieur au minimum actuel.
