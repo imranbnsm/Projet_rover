@@ -17,7 +17,10 @@ void random_moves() {
     srand(time(NULL));
     int dispo_moves[] = {22, 15, 7, 7, 21, 21, 7};
     for(int i = 0; i<9; i++){
-        movesrobot[i] = moves[rand()%7];
+        int indice = rand()%7;
+        movesrobot[i] = moves[indice];
+        dispo_moves[indice]--;
+
     }
 
 }

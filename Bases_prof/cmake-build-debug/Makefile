@@ -47,19 +47,19 @@ cmake_force:
 SHELL = cmd.exe
 
 # The CMake executable.
-CMAKE_COMMAND = "C:\Program Files\JetBrains\CLion 2023.3.4\bin\cmake\win\x64\bin\cmake.exe"
+CMAKE_COMMAND = "C:\Program Files\JetBrains\CLion 2023.3.2\bin\cmake\win\x64\bin\cmake.exe"
 
 # The command to remove a file.
-RM = "C:\Program Files\JetBrains\CLion 2023.3.4\bin\cmake\win\x64\bin\cmake.exe" -E rm -f
+RM = "C:\Program Files\JetBrains\CLion 2023.3.2\bin\cmake\win\x64\bin\cmake.exe" -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Users\Antoine\CLionProjects\Projet_rover\Bases_prof
+CMAKE_SOURCE_DIR = C:\Users\imran\CLionProjects\Projet_rover\Bases_prof
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Users\Antoine\CLionProjects\Projet_rover\Bases_prof\cmake-build-debug
+CMAKE_BINARY_DIR = C:\Users\imran\CLionProjects\Projet_rover\Bases_prof\cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -67,7 +67,7 @@ CMAKE_BINARY_DIR = C:\Users\Antoine\CLionProjects\Projet_rover\Bases_prof\cmake-
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "No interactive CMake dialog available..."
-	"C:\Program Files\JetBrains\CLion 2023.3.4\bin\cmake\win\x64\bin\cmake.exe" -E echo "No interactive CMake dialog available."
+	"C:\Program Files\JetBrains\CLion 2023.3.2\bin\cmake\win\x64\bin\cmake.exe" -E echo "No interactive CMake dialog available."
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -77,7 +77,7 @@ edit_cache/fast: edit_cache
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake to regenerate build system..."
-	"C:\Program Files\JetBrains\CLion 2023.3.4\bin\cmake\win\x64\bin\cmake.exe" --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	"C:\Program Files\JetBrains\CLion 2023.3.2\bin\cmake\win\x64\bin\cmake.exe" --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -86,9 +86,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Antoine\CLionProjects\Projet_rover\Bases_prof\cmake-build-debug\CMakeFiles C:\Users\Antoine\CLionProjects\Projet_rover\Bases_prof\cmake-build-debug\\CMakeFiles\progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\imran\CLionProjects\Projet_rover\Bases_prof\cmake-build-debug\CMakeFiles C:\Users\imran\CLionProjects\Projet_rover\Bases_prof\cmake-build-debug\\CMakeFiles\progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Antoine\CLionProjects\Projet_rover\Bases_prof\cmake-build-debug\CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\imran\CLionProjects\Projet_rover\Bases_prof\cmake-build-debug\CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -248,30 +248,6 @@ node.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/node.c.s
 .PHONY : node.c.s
 
-node2.obj: node2.c.obj
-.PHONY : node2.obj
-
-# target to build an object file
-node2.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/node2.c.obj
-.PHONY : node2.c.obj
-
-node2.i: node2.c.i
-.PHONY : node2.i
-
-# target to preprocess a source file
-node2.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/node2.c.i
-.PHONY : node2.c.i
-
-node2.s: node2.c.s
-.PHONY : node2.s
-
-# target to generate assembly for a file
-node2.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/node2.c.s
-.PHONY : node2.c.s
-
 queue.obj: queue.c.obj
 .PHONY : queue.obj
 
@@ -344,30 +320,6 @@ tree.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/tree.c.s
 .PHONY : tree.c.s
 
-tree2.obj: tree2.c.obj
-.PHONY : tree2.obj
-
-# target to build an object file
-tree2.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/tree2.c.obj
-.PHONY : tree2.c.obj
-
-tree2.i: tree2.c.i
-.PHONY : tree2.i
-
-# target to preprocess a source file
-tree2.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/tree2.c.i
-.PHONY : tree2.c.i
-
-tree2.s: tree2.c.s
-.PHONY : tree2.s
-
-# target to generate assembly for a file
-tree2.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled1.dir\build.make CMakeFiles/untitled1.dir/tree2.c.s
-.PHONY : tree2.c.s
-
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -392,9 +344,6 @@ help:
 	@echo ... node.obj
 	@echo ... node.i
 	@echo ... node.s
-	@echo ... node2.obj
-	@echo ... node2.i
-	@echo ... node2.s
 	@echo ... queue.obj
 	@echo ... queue.i
 	@echo ... queue.s
@@ -404,9 +353,6 @@ help:
 	@echo ... tree.obj
 	@echo ... tree.i
 	@echo ... tree.s
-	@echo ... tree2.obj
-	@echo ... tree2.i
-	@echo ... tree2.s
 .PHONY : help
 
 
