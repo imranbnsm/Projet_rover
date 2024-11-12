@@ -10,6 +10,18 @@
 #include "map.h"
 #include "moves.h"
 
+t_move moves[] = { F_10, F_20, F_30, B_10, T_LEFT, T_RIGHT, U_TURN};
+t_move movesrobot[9];
+
+void random_moves() {
+    srand(time(NULL));
+    int dispo_moves[] = {22, 15, 7, 7, 21, 21, 7};
+    for(int i = 0; i<9; i++){
+        movesrobot[i] = moves[rand()%7];
+    }
+
+}
+
 t_position generateRandomPosition(t_map map) {
     t_position randomPos;
     srand(time(NULL));
@@ -17,7 +29,7 @@ t_position generateRandomPosition(t_map map) {
     do {
         randomPos.x = rand() % map.x_max;
         randomPos.y = rand() % map.y_max;
-    } while ( (map.costs[randomPos.x][randomPos.y] !=0 ) && (map.costs[randomPos.x][randomPos.y] < 10000 ) ); // Vérifier les coordonnées
+    } while ( (map.costs[randomPos.y][randomPos.x] == 0 ) && (map.costs[randomPos.y][randomPos.x] > 10000 ) ); // Vérifier les coordonnées
 
     return randomPos;
 }

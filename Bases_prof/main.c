@@ -33,8 +33,14 @@ int main() {
         printf("\n");
     }
     displayMap(map);
+    random_moves();
     t_tree tree = createTree(map);
     completeTree(&tree,map);
     displayTree(tree.root,0);
+
+
+
+
+
     return 0;
 }

@@ -7,6 +7,7 @@
 
 #include "node.h"
 #include "map.h"
+#include "moves.h"
 
 typedef struct s_tree
 {
@@ -22,6 +23,7 @@ void displayTree(t_node *node, int level);
 void freeTree(t_tree *tree);
 t_node *SearchLeafMinAuxiliaire(t_node *node, t_localisation loc, t_node **min_cost_node, int *min_cost);
 t_node *SearchLeafMin(t_tree tree, t_localisation loc);
+void random_moves();
 
 
 
