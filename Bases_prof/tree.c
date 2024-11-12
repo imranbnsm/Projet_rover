@@ -117,4 +117,3 @@ void displayTree(t_node *root, int depth)
         displayTree(root->children[i], depth + 1);
     }
 }
-
