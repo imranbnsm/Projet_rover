@@ -20,7 +20,6 @@ void random_moves() {
         int indice = rand()%7;
         movesrobot[i] = moves[indice];
         dispo_moves[indice]--;
-
     }
 
 }
@@ -56,52 +55,67 @@ t_tree createTree(t_map map)
 
 void insertInTree(t_tree *tree, const int* list_moves, int length_moves, t_map map)
 {   t_node *nd=tree->root;
-    t_move moves[] = { F_10, F_20, F_30, B_10, T_LEFT, T_RIGHT, U_TURN};
     for (int i=0;i<length_moves-1;i++){
         nd=nd->children[list_moves[i]];    // boucle pour acceder au parent du dernier noeud en fonction des mouvements
-                                           // on va jusqu'à lenght_moves-2, le list_moves[lenght_moves-1] sera attribue à notre nouveau noeud
+        // on va jusqu'à lenght_moves-2, le list_moves[lenght_moves-1] sera attribue à notre nouveau noeud
     }
-    t_localisation new_pos = move(nd->loc,moves[list_moves[length_moves-1]]);    // On trouve la nouvelle localisation du dernier noeud en fonction de 
-                                                                                 // la localisation du noeud parent et du mouvement qui devra être effectué
+    t_localisation new_pos = move(nd->loc,movesrobot[list_moves[length_moves-1]]);    // On trouve la nouvelle localisation du dernier noeud en fonction de
+    // la localisation du noeud parent et du mouvement qui devra être effectué
     if (isValidLocalisation(new_pos.pos,map.x_max,map.y_max)){
         int cost=map.costs[new_pos.pos.y][new_pos.pos.x];    // Verifier si c'est pas l'inverse pour les pos (d'abord x puis y)
-        t_node *nd_child= createNode(new_pos, cost, nd->depth+1);
+        t_node *nd_child = createNode(new_pos, cost, nd->depth+1);
         addChild(nd, nd_child);
-        nd_child->move=moves[list_moves[length_moves-1]];
+        nd_child->move=movesrobot[list_moves[length_moves-1]];
         for(int j=0;j<length_moves;j++){
             nd_child->move_interdit[j]=list_moves[j]; // Pourquoi on les interdits, on a le droit de reutiliser les mêmes mouvements normalements.
         }
-    } else {
-        //fin de partie
+        nd_child->depth=nd->depth+1;
     }
 }
-void completeTree (t_tree *tree, t_map map){
-    t_node *nd=tree->root;
-    t_move moves[] = { F_10, F_20, F_30, B_10, T_LEFT, T_RIGHT, U_TURN};
-    int j=0;
-    for (int i=0;i<9;i++){ // 9 mouvements à effectuer
-        for (int l=0;l<9-nd->depth;l++) { //  
-            if (nd->depth == 0) {
-                int list_moves[] = {l};
-                insertInTree(tree, list_moves, 1, map); // On crée les premiers fils de la racine
-                // en mettant {l}, cela nous permet de faire des fils pour chaque types de mouvements differents.
-                // si l = 7 ou 8 ça fait quoi ?
-            } else if (moves[nd->move_interdit[j]] != moves[l] && moves[l] != nd->move) { // on verifie que le mouvement du nouveau noeud est different des precedents
-                int list_moves[nd->depth + 2]; // ? 
-                for (int k = 0; k < nd->depth; k++) {
-                    list_moves[k] = nd->move_interdit[k]; // les mouvements de K deviennent des mouvements interdits.
-                }
-                list_moves[nd->depth] = (int) nd->move;
-                list_moves[nd->depth + 1] = l;
-                insertInTree(tree, list_moves, nd->depth + 2, map);
-            } else {
-                continue;
-            }
+
+void completeTree(t_tree *tree, t_map map) {
+     t_node *nd=tree->root;
+     for (int l=0;l<9;l++) {
+         if (nd->depth == 0) {
+             int list_moves[] = {l};
+             insertInTree(tree, list_moves, 1, map); // On crée les premiers fils de la racine
+         }
+         auxiCompleteTree(tree, nd->children[l], map);
+     }
+}
+
+
+void auxiCompleteTree(t_tree *tree, t_node *nd, t_map map) {
+    if (nd->depth == 5) {  // Limite la profondeur de l'arbre
+        return;
+    }
+    for (int l = 0; l < 9-nd->depth; l++) {  // Parcourir tous les mouvements possible
+        printf("%d ",nd->depth);
+        int list_moves[nd->depth + 1];
+        int j=0;
+
+        // Remplir la liste des mouvements
+        for (int k = 0; k < nd->depth-1; k++) {
+            list_moves[k] = nd->move_interdit[k];
         }
-        break;
+
+        list_moves[nd->depth-1] = (int) nd->move;
+        list_moves[nd->depth] = l;  // Ajouter le mouvement actuel
+
+        if (movesrobot[l] != nd->move && movesrobot[l] != movesrobot[nd->move_interdit[j]]) {  // Vérifier que le mouvement n'est pas interdit
+            printf("c ");
+            insertInTree(tree, list_moves, nd->depth + 1, map);
+        }
     }
 
+    // Appeler récursivement auxiCompleteTree pour chaque enfant
+    for (int i = 0; i < nd->num_children; i++) {
+        if (nd->children[i] != NULL) {
+            auxiCompleteTree(tree, nd->children[i], map);
+        }
+    }
 }
+
 
 void displayTree(t_node *root, int depth)
 {
@@ -127,7 +141,6 @@ void displayTree(t_node *root, int depth)
 le noeud avec le coup minimum actuel et sa valeur. */
 
 void SearchLeafMinAuxiliaire(t_node *node, t_node **min_cost_node, int *min_cost) {
-    if (node == NULL) return NULL;
 
     // Vérifie si le noeud actuel a un coût inférieur au minimum actuel.
     
@@ -153,7 +166,7 @@ t_node *SearchLeafMin(t_tree tree) {
 
     // Appelle de la fonction auxiliaire pour rechercher le noeud feuille avec le coût minimum
     
-   SearchLeafMinAuxiliaire(tree.root, &min_cost_node, &min_cost); 
+   SearchLeafMinAuxiliaire(tree.root, &min_cost_node, &min_cost);
    return min_cost_node;
 }
 
