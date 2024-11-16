@@ -11,7 +11,9 @@
 #include "moves.h"
 
 t_move moves[] = { F_10, F_20, F_30, B_10, T_LEFT, T_RIGHT, U_TURN};
-t_move movesrobot[9];
+t_move movesrobot[9];//appeler nouvelle fonction random moves dans moves.c
+
+//pour le move en string appeler fonction movesAstring dans moves.c
 
 void random_moves() {
     srand(time(NULL));
