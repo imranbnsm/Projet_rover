@@ -10,15 +10,13 @@
 #include "map.h"
 #include "moves.h"
 
-//t_move moves[] = { F_10, F_20, F_30, B_10, T_LEFT, T_RIGHT, U_TURN};
-t_move *movesrobot;
+t_move *movesrobot=NULL;
 
 //pour le move en string appeler fonction movesAstring dans moves.c
 
 void getMoves(){
     movesrobot = getRandomMoves(9);
 }
-
 
 t_position generateRandomPosition(t_map map) {
     t_position randomPos;
@@ -41,30 +39,32 @@ t_tree createTree(t_map map)
 {
     t_tree tree;
     t_localisation robot;
+    getMoves();
     robot.pos = generateRandomPosition(map);
     robot.ori = generateRandomOrientation();
     int cost = map.costs[robot.pos.y][robot.pos.x];
     tree.root = createNode(robot, cost, 0);
+    for (int i=0;i<9;i++){
+        char *str= getMoveAsString(movesrobot[i]);
+        printf("%s ",str);
+    }
+    printf("\n");
+    //completeTree(&tree,map);
     return tree;
 }
 
-
-void insertInTree(t_tree *tree, const int* list_moves, int length_moves, t_map map)
-{   t_node *nd=tree->root;
-    for (int i=0;i<length_moves-1;i++){
-        nd=nd->children[list_moves[i]];    // boucle pour acceder au parent du dernier noeud en fonction des mouvements
-        // on va jusqu'à lenght_moves-2, le list_moves[lenght_moves-1] sera attribue à notre nouveau noeud
-    }
-    t_localisation new_pos = move(nd->loc,movesrobot[list_moves[length_moves-1]]);    // On trouve la nouvelle localisation du dernier noeud en fonction de
+void insertInTree(t_node *nd, int i_move, t_map map)
+{   t_localisation new_pos = move(nd->loc,movesrobot[i_move]);    // On trouve la nouvelle localisation du dernier noeud en fonction de
     // la localisation du noeud parent et du mouvement qui devra être effectué
     if (isValidLocalisation(new_pos.pos,map.x_max,map.y_max)){
         int cost=map.costs[new_pos.pos.y][new_pos.pos.x];    // Verifier si c'est pas l'inverse pour les pos (d'abord x puis y)
         t_node *nd_child = createNode(new_pos, cost, nd->depth+1);
         addChild(nd, nd_child);
-        nd_child->move=movesrobot[list_moves[length_moves-1]];
-        for(int j=0;j<length_moves;j++){
-            nd_child->move_interdit[j]=list_moves[j]; // Pourquoi on les interdits, on a le droit de reutiliser les mêmes mouvements normalements.
+        nd_child->move=movesrobot[i_move];
+        for(int j=0;j<nd->depth-1;j++){
+            nd_child->move_interdit[j]=nd->move_interdit[j]; // Pourquoi on les interdits, on a le droit de reutiliser les mêmes mouvements normalements.
         }
+        nd_child->move_interdit[nd->depth-1]=i_move;
         nd_child->depth=nd->depth+1;
     }
 }
@@ -72,42 +72,33 @@ void insertInTree(t_tree *tree, const int* list_moves, int length_moves, t_map m
 void completeTree(t_tree *tree, t_map map) {
      t_node *nd=tree->root;
      for (int l=0;l<9;l++) {
-         if (nd->depth == 0) {
-             int list_moves[] = {l};
-             insertInTree(tree, list_moves, 1, map); // On crée les premiers fils de la racine
-         }
-         auxiCompleteTree(tree, nd->children[l], map);
+         insertInTree(nd,l, map); // On crée les premiers fils de la racine
+         auxiCompleteTree(nd->children[l], map);
      }
 }
 
 
-void auxiCompleteTree(t_tree *tree, t_node *nd, t_map map) {
-    if (nd->depth == 5) {  // Limite la profondeur de l'arbre
+void auxiCompleteTree(t_node *nd, t_map map) {
+    if (nd->depth==5){
         return;
-    }
-    for (int l = 0; l < 9-nd->depth; l++) {  // Parcourir tous les mouvements possible
-        printf("%d ",nd->depth);
-        int list_moves[nd->depth + 1];
-        int j=0;
-
-        // Remplir la liste des mouvements
-        for (int k = 0; k < nd->depth-1; k++) {
-            list_moves[k] = nd->move_interdit[k];
+    } else {
+        for (int i=0 ; i<9-nd->depth ; i++){
+            int valid_child=1;
+            for (int j=0 ; j<nd->depth-1 ; j++){
+                if (movesrobot[i] == movesrobot[nd->move_interdit[j]]) {  // Vérifier que le mouvement n'est pas interdit
+                    valid_child=0;
+                    break;
+                }
+            }
+            if (valid_child){
+                insertInTree(nd, i, map);
+            }
         }
 
-        list_moves[nd->depth-1] = (int) nd->move;
-        list_moves[nd->depth] = l;  // Ajouter le mouvement actuel
-
-        if (movesrobot[l] != nd->move && movesrobot[l] != movesrobot[nd->move_interdit[j]]) {  // Vérifier que le mouvement n'est pas interdit
-            printf("c ");
-            insertInTree(tree, list_moves, nd->depth + 1, map);
-        }
-    }
-
-    // Appeler récursivement auxiCompleteTree pour chaque enfant
-    for (int i = 0; i < nd->num_children; i++) {
-        if (nd->children[i] != NULL) {
-            auxiCompleteTree(tree, nd->children[i], map);
+        for (int i = 0; i < nd->num_children; i++) {
+            if (nd->children[i]!=NULL) {
+                auxiCompleteTree(nd->children[i], map);
+            }
         }
     }
 }

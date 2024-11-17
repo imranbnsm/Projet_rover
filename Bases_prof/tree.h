@@ -17,9 +17,9 @@ typedef struct s_tree
 
 t_tree createTree(t_map map);
 t_node *searchNode(t_tree tree, t_localisation loc);
-void insertInTree(t_tree *tree, const int* list_moves, int length_moves, t_map map);
+void insertInTree(t_node *nd, int move, t_map map);
 void completeTree (t_tree *, t_map map);
-void auxiCompleteTree(t_tree *tree, t_node *node,t_map map);
+void auxiCompleteTree(t_node *node,t_map map);
 void displayTree(t_node *node, int level);
 void freeTree(t_tree *tree);
 void SearchLeafMinAuxiliaire(t_node *node, t_node **min_cost_node, int *min_cost);

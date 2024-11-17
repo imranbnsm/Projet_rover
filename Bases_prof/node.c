@@ -14,7 +14,7 @@ t_node *createNode(t_localisation loc, int cost, int depth) // faut peut être i
     node->depth = depth;
     node->children = NULL;   // Pas d'enfants au début
     node->num_children = 0;   // Pas d'enfants
-    node->move_interdit= malloc(depth*sizeof(int));
+    node->move_interdit = malloc(depth*sizeof(int));
     return node;
 }
 
