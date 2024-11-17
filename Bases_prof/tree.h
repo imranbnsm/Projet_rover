@@ -25,6 +25,7 @@ void freeTree(t_tree *tree);
 void SearchLeafMinAuxiliaire(t_node *node, t_node **min_cost_node, int *min_cost);
 t_node *SearchLeafMin(t_tree tree);
 void getMoves();
+t_node** CheminRacineFeuille(t_tree tree, t_node* node);
 
 
 

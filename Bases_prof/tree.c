@@ -174,6 +174,32 @@ t_node *SearchLeafMin(t_tree tree) {
 
 // chemin depuis la racine vers cette feuille.
 
-t_node** CheminRacineFeuille(t_tree tree, t_node* node);
+t_node** CheminRacineFeuille(t_tree tree, t_node* node) {
+
+    if (tree.root == NULL || node == NULL || tree.height <= 0) {
+        return NULL;
+    }
+
+    t_node** path = (t_node**)malloc((tree.height +1) *  sizeof(t_node*));
+
+    t_node* current = tree.root;
+    t_node* minNode = (t_node*)malloc(sizeof(t_node));
+    int min, i, j;
+    for (i = 0; i < tree.height + 1; i++) {
+        min = 10000;
+        for (j = 0; j < current->num_children; j++) {
+            if (current->children[j]->cost < min) {
+                min = current->children[j]->cost;
+                minNode = current->children[j];
+            }
+        }
+        path[i] = minNode;
+        if (current->num_children == 0) {
+            break;
+        }
+        current = current->children[j];
+    }
+    return path;
+}
 
 
