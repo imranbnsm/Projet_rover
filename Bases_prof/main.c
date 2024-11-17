@@ -23,7 +23,7 @@ int main() {
         }
         printf("\n");
     }
-    // printf the costs, aligned left 5 digits
+    //printf the costs, aligned left 5 digits
     for (int i = 0; i < map.y_max; i++)
     {
         for (int j = 0; j < map.x_max; j++)
@@ -32,9 +32,9 @@ int main() {
         }
         printf("\n");
     }
-    //displayMap(map);
+    displayMap(map);
     getMoves();
     t_tree tree = createTree(map);
-    //displayTree(tree.root,0);
+    displayTree(tree.root,0);
     return 0;
 }

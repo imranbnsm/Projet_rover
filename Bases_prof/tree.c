@@ -10,13 +10,22 @@
 #include "map.h"
 #include "moves.h"
 
-t_move *movesrobot=NULL;
+t_move moves[] = { F_10, F_20, F_30, B_10, T_LEFT, T_RIGHT, U_TURN};
+t_move *movesrobot;
 
 //pour le move en string appeler fonction movesAstring dans moves.c
 
 void getMoves(){
-    movesrobot = getRandomMoves(9);
-}
+    movesrobot = (t_move *)malloc(9 * sizeof(t_move));
+    srand(time(NULL));
+    int dispo_moves[] = {22, 15, 7, 7, 21, 21, 7};
+    for(int i = 0; i<9; i++){
+        int indice = rand()%7;
+        movesrobot[i] = moves[indice];
+        dispo_moves[indice]--;
+    }
+    return;
+} //ne prend pas en compte les probas
 
 t_position generateRandomPosition(t_map map) {
     t_position randomPos;
@@ -44,12 +53,12 @@ t_tree createTree(t_map map)
     robot.ori = generateRandomOrientation();
     int cost = map.costs[robot.pos.y][robot.pos.x];
     tree.root = createNode(robot, cost, 0);
-    for (int i=0;i<9;i++){
+    /*for (int i=0;i<9;i++){
         char *str= getMoveAsString(movesrobot[i]);
         printf("%s ",str);
     }
-    printf("\n");
-    //completeTree(&tree,map);
+    printf("\n");*/
+    completeTree(&tree,map);
     return tree;
 }
 
@@ -67,6 +76,7 @@ void insertInTree(t_node *nd, int i_move, t_map map)
         nd_child->move_interdit[nd->depth-1]=i_move;
         nd_child->depth=nd->depth+1;
     }
+    return;
 }
 
 void completeTree(t_tree *tree, t_map map) {
@@ -75,6 +85,7 @@ void completeTree(t_tree *tree, t_map map) {
          insertInTree(nd,l, map); // On crée les premiers fils de la racine
          auxiCompleteTree(nd->children[l], map);
      }
+     return;
 }
 
 
@@ -85,7 +96,7 @@ void auxiCompleteTree(t_node *nd, t_map map) {
         for (int i=0 ; i<9-nd->depth ; i++){
             int valid_child=1;
             for (int j=0 ; j<nd->depth-1 ; j++){
-                if (movesrobot[i] == movesrobot[nd->move_interdit[j]]) {  // Vérifier que le mouvement n'est pas interdit
+                if (i == nd->move_interdit[j]) {  // Vérifier que le mouvement n'est pas interdit movesrobots[]
                     valid_child=0;
                     break;
                 }
@@ -100,6 +111,7 @@ void auxiCompleteTree(t_node *nd, t_map map) {
                 auxiCompleteTree(nd->children[i], map);
             }
         }
+        return;
     }
 }
 
@@ -120,6 +132,7 @@ void displayTree(t_node *root, int depth)
     {
         displayTree(root->children[i], depth + 1);
     }
+    return;
 }
 
 // recherche d'une feuille de valeur minimale 
@@ -141,6 +154,7 @@ void SearchLeafMinAuxiliaire(t_node *node, t_node **min_cost_node, int *min_cost
     for (int i = 0; i < node->num_children; i++) {
         SearchLeafMinAuxiliaire(node->children[i], min_cost_node, min_cost);    // On appelle la fonction recursivement pour trouver le noeud avec le coût le plus bas.
     }
+    return;
 
 }
 
