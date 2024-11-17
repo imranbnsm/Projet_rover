@@ -10,21 +10,15 @@
 #include "map.h"
 #include "moves.h"
 
-t_move moves[] = { F_10, F_20, F_30, B_10, T_LEFT, T_RIGHT, U_TURN};
-t_move movesrobot[9];//appeler nouvelle fonction random moves dans moves.c
+//t_move moves[] = { F_10, F_20, F_30, B_10, T_LEFT, T_RIGHT, U_TURN};
+t_move *movesrobot;
 
 //pour le move en string appeler fonction movesAstring dans moves.c
 
-void random_moves() {
-    srand(time(NULL));
-    int dispo_moves[] = {22, 15, 7, 7, 21, 21, 7};
-    for(int i = 0; i<9; i++){
-        int indice = rand()%7;
-        movesrobot[i] = moves[indice];
-        dispo_moves[indice]--;
-    }
-
+void getMoves(){
+    movesrobot = getRandomMoves(9);
 }
+
 
 t_position generateRandomPosition(t_map map) {
     t_position randomPos;
