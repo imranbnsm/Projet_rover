@@ -142,6 +142,10 @@ le noeud avec le coup minimum actuel et sa valeur. */
 
 void SearchLeafMinAuxiliaire(t_node *node, t_node **min_cost_node, int *min_cost) {
 
+    if (node == NULL) {
+        return;
+    }
+    
     // Vérifie si le noeud actuel a un coût inférieur au minimum actuel.
     
     if (node->num_children == 0 && node->cost < *min_cost) {
