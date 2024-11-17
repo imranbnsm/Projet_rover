@@ -24,7 +24,7 @@ void displayTree(t_node *node, int level);
 void freeTree(t_tree *tree);
 void SearchLeafMinAuxiliaire(t_node *node, t_node **min_cost_node, int *min_cost);
 t_node *SearchLeafMin(t_tree tree);
-void getmoves();
+void getMoves();
 
 
 

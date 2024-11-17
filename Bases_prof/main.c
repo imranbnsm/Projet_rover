@@ -32,8 +32,8 @@ int main() {
         }
         printf("\n");
     }
-    displayMap(map);
-    random_moves();
+    //displayMap(map);
+    getMoves();
     t_tree tree = createTree(map);
     completeTree(&tree,map);
     displayTree(tree.root,0);
