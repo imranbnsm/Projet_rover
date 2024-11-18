@@ -184,25 +184,41 @@ t_node** CheminRacineFeuille(t_tree tree, t_node* node) {
         return NULL;
     }
 
-    t_node** path = (t_node**)malloc((tree.height +1) *  sizeof(t_node*));
 
-    t_node* current = tree.root;
-    t_node* minNode = (t_node*)malloc(sizeof(t_node));
-    int min, i, j;
-    for (i = 0; i < tree.height + 1; i++) {
-        min = 10000;
-        for (j = 0; j < current->num_children; j++) {
-            if (current->children[j]->cost < min) {
-                min = current->children[j]->cost;
+    t_node** path = (t_node**)malloc((tree.height + 1) * sizeof(t_node*));
+    if (path == NULL) {
+        return NULL;  
+    }
+
+    int min, j;
+    path[0] = tree.root;
+    min = 10000;
+    printf("%d ", path[0]->cost);
+ 
+    t_node* current = tree.root; 
+    path[0] = current;
+    int i = 1;
+
+    while (current->num_children > 0 && i <= tree.height) {
+        t_node* minNode = current->children[0];  
+        int minCost = minNode->cost;
+
+        // On cherche le noeud avec le coût minimal parmi les enfants
+        for (int j = 1; j < current->num_children; j++) {
+            if (current->children[j]->cost < minCost) {
+                minCost = current->children[j]->cost;
                 minNode = current->children[j];
             }
         }
+
+        // On ajoute ce noeud au chemin
         path[i] = minNode;
-        if (current->num_children == 0) {
-            break;
-        }
-        current = current->children[j];
+        printf("%d ", minNode->cost);  
+        current = minNode; 
+        i++; 
     }
+
+    path[i] = NULL;
     return path;
 }
 
