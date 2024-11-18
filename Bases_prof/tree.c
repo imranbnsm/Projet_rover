@@ -53,11 +53,6 @@ t_tree createTree(t_map map)
     robot.ori = generateRandomOrientation();
     int cost = map.costs[robot.pos.y][robot.pos.x];
     tree.root = createNode(robot, cost, 0);
-    /*for (int i=0;i<9;i++){
-        char *str= getMoveAsString(movesrobot[i]);
-        printf("%s ",str);
-    }
-    printf("\n");*/
     completeTree(&tree,map);
     return tree;
 }
@@ -90,7 +85,7 @@ void completeTree(t_tree *tree, t_map map) {
 
 
 void auxiCompleteTree(t_node *nd, t_map map) {
-    if (nd->depth==5){
+    if (nd->depth>4){
         return;
     } else {
         for (int i=0 ; i<9-nd->depth ; i++){
@@ -150,7 +145,7 @@ void SearchLeafMinAuxiliaire(t_node *node, t_node **min_cost_node, int *min_cost
     
     if (node->num_children == 0 && node->cost < *min_cost) {
         *min_cost = node->cost;
-        *min_cost_node = node;
+        min_cost_node = node;
     }
 
     // Y a plusieurs feuilles qui peuvent avoir un cout plus faible.
