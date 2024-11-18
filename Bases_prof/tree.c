@@ -61,10 +61,10 @@ void insertInTree(t_node *nd, int i_move, t_map map)
 {   t_localisation new_pos = move(nd->loc,movesrobot[i_move]);    // On trouve la nouvelle localisation du dernier noeud en fonction de
     // la localisation du noeud parent et du mouvement qui devra être effectué
     if (isValidLocalisation(new_pos.pos,map.x_max,map.y_max)){
-        int cost=map.costs[new_pos.pos.y][new_pos.pos.x];    // Verifier si c'est pas l'inverse pour les pos (d'abord x puis y)
+        int cost = map.costs[new_pos.pos.y][new_pos.pos.x];    // Verifier si c'est pas l'inverse pour les pos (d'abord x puis y)
         t_node *nd_child = createNode(new_pos, cost, nd->depth+1);
         addChild(nd, nd_child);
-        nd_child->move=movesrobot[i_move];
+        nd_child->move = movesrobot[i_move];
         for(int j=0;j<nd->depth-1;j++){
             nd_child->move_interdit[j]=nd->move_interdit[j]; // Pourquoi on les interdits, on a le droit de reutiliser les mêmes mouvements normalements.
         }
@@ -78,7 +78,10 @@ void completeTree(t_tree *tree, t_map map) {
      t_node *nd=tree->root;
      for (int l=0;l<9;l++) {
          insertInTree(nd,l, map); // On crée les premiers fils de la racine
-         auxiCompleteTree(nd->children[l], map);
+         //auxiCompleteTree(nd->children[l], map);
+     }
+     for (int k=0; k<9; k++){
+         auxiCompleteTree(nd->children[k],map);
      }
      return;
 }
