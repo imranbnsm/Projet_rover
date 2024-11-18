@@ -58,39 +58,43 @@ t_tree createTree(t_map map)
 }
 
 void insertInTree(t_node *nd, int i_move, t_map map)
-{   t_localisation new_pos = move(nd->loc,movesrobot[i_move]);    // On trouve la nouvelle localisation du dernier noeud en fonction de
-    // la localisation du noeud parent et du mouvement qui devra être effectué
-    if (isValidLocalisation(new_pos.pos,map.x_max,map.y_max)){
-        int cost = map.costs[new_pos.pos.y][new_pos.pos.x];    // Verifier si c'est pas l'inverse pour les pos (d'abord x puis y)
-        t_node *nd_child = createNode(new_pos, cost, nd->depth+1);
-        addChild(nd, nd_child);
-        nd_child->move = movesrobot[i_move];
-        for(int j=0;j<nd->depth-1;j++){
-            nd_child->move_interdit[j]=nd->move_interdit[j]; // Pourquoi on les interdits, on a le droit de reutiliser les mêmes mouvements normalements.
+{   if (nd != NULL) {
+        t_localisation new_pos = move(nd->loc,
+                                      movesrobot[i_move]);    // On trouve la nouvelle localisation du dernier noeud en fonction de
+        // la localisation du noeud parent et du mouvement qui devra être effectué
+        if (isValidLocalisation(new_pos.pos, map.x_max, map.y_max)) {
+            int cost = map.costs[new_pos.pos.y][new_pos.pos.x];    // Verifier si c'est pas l'inverse pour les pos (d'abord x puis y)
+            t_node *nd_child = createNode(new_pos, cost, nd->depth + 1);
+            addChild(nd, nd_child);
+            nd_child->move = movesrobot[i_move];
+            for (int j = 0; j < nd->depth - 1; j++) {
+                nd_child->move_interdit[j] = nd->move_interdit[j]; // Pourquoi on les interdits, on a le droit de reutiliser les mêmes mouvements normalements.
+            }
+            nd_child->move_interdit[nd->depth - 1] = i_move;
+            nd_child->depth = nd->depth + 1;
         }
-        nd_child->move_interdit[nd->depth-1]=i_move;
-        nd_child->depth=nd->depth+1;
     }
     return;
 }
 
 void completeTree(t_tree *tree, t_map map) {
-     t_node *nd=tree->root;
-     for (int l=0;l<9;l++) {
-         insertInTree(nd,l, map); // On crée les premiers fils de la racine
-         //auxiCompleteTree(nd->children[l], map);
-     }
-     for (int k=0; k<9; k++){
-         auxiCompleteTree(nd->children[k],map);
+     if (tree!=NULL && tree->root!=NULL) {
+         t_node *nd = tree->root;
+         for (int l = 0; l < 9; l++) {
+             insertInTree(nd, l, map); // On crée les premiers fils de la racine
+         }
+         for (int k = 0; k < 9; k++) {
+             auxiCompleteTree(nd->children[k], map);
+         }
      }
      return;
 }
 
 
 void auxiCompleteTree(t_node *nd, t_map map) {
-    if (nd->depth>4){
+    if (nd!=NULL && nd->depth>4){
         return;
-    } else {
+    } else if (nd!=NULL){
         for (int i=0 ; i<9-nd->depth ; i++){
             int valid_child=1;
             for (int j=0 ; j<nd->depth-1 ; j++){
@@ -114,21 +118,19 @@ void auxiCompleteTree(t_node *nd, t_map map) {
 }
 
 
-void displayTree(t_node *root, int depth)
-{
-    if (root == NULL)
+void displayTree(t_node *root, int depth) {
+    if (root == NULL) {
         return;
+    } else {
+        for (int i = 0; i < depth; i++) {
+            printf("  ");
+        }
 
-    for (int i = 0; i < depth; i++)
-    {
-        printf("  ");
-    }
+        displayNode(root);
 
-    displayNode(root);
-
-    for (int i = 0; i < root->num_children; i++)
-    {
-        displayTree(root->children[i], depth + 1);
+        for (int i = 0; i < root->num_children; i++) {
+            displayTree(root->children[i], depth + 1);
+        }
     }
     return;
 }
@@ -148,7 +150,7 @@ void SearchLeafMinAuxiliaire(t_node *node, t_node **min_cost_node, int *min_cost
     
     if (node->num_children == 0 && node->cost < *min_cost) {
         *min_cost = node->cost;
-        min_cost_node = node;
+        *min_cost_node = node;
     }
 
     // Y a plusieurs feuilles qui peuvent avoir un cout plus faible.

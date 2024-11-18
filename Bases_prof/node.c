@@ -8,7 +8,7 @@
 
 t_node *createNode(t_localisation loc, int cost, int depth) // faut peut être intialise le champ move.
 {
-    t_node *node = (t_node *)malloc(sizeof(t_node));
+    t_node *node = (t_node *)malloc(2*sizeof(t_node));
     node->loc = loc;
     node->cost = cost;
     node->depth = depth;
