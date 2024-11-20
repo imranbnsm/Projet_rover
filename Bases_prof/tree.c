@@ -13,6 +13,7 @@
 t_move moves[] = { F_10, F_20, F_30, B_10, T_LEFT, T_RIGHT, U_TURN};
 t_move *movesrobot;
 
+
 //pour le move en string appeler fonction movesAstring dans moves.c
 
 void getMoves(){
@@ -29,18 +30,18 @@ void getMoves(){
 
 t_position generateRandomPosition(t_map map) {
     t_position randomPos;
-    srand(time(NULL));
+    //srand(time(NULL));
 
     do {
         randomPos.x = rand() % map.x_max;
         randomPos.y = rand() % map.y_max;
-    } while ( (map.costs[randomPos.y][randomPos.x] == 0 ) && (map.costs[randomPos.y][randomPos.x] > 10000 ) ); // Vérifier les coordonnées
+    } while ( (map.costs[randomPos.y][randomPos.x] == 0 ) || (map.costs[randomPos.y][randomPos.x] > 10000 ) ); // Vérifier les coordonnées
 
     return randomPos;
 }
 
 t_orientation generateRandomOrientation() {
-    srand(time(NULL));
+    //srand(time(NULL));
     return (t_orientation)(rand() % 4);
 }
 
@@ -59,16 +60,17 @@ t_tree createTree(t_map map)
 
 void insertInTree(t_node *nd, int i_move, t_map map)
 {   if (nd != NULL) {
-        t_localisation new_pos = move(nd->loc,
-                                      movesrobot[i_move]);    // On trouve la nouvelle localisation du dernier noeud en fonction de
+        t_localisation new_pos = move(nd->loc,movesrobot[i_move]);    // On trouve la nouvelle localisation du dernier noeud en fonction de
         // la localisation du noeud parent et du mouvement qui devra être effectué
-        if (isValidLocalisation(new_pos.pos, map.x_max, map.y_max)) {
+        if (isValidLocalisation(new_pos.pos, map.x_max, map.y_max) && nd->cost<10000) {
             int cost = map.costs[new_pos.pos.y][new_pos.pos.x];    // Verifier si c'est pas l'inverse pour les pos (d'abord x puis y)
             t_node *nd_child = createNode(new_pos, cost, nd->depth + 1);
             addChild(nd, nd_child);
             nd_child->move = movesrobot[i_move];
             for (int j = 0; j < nd->depth - 1; j++) {
-                nd_child->move_interdit[j] = nd->move_interdit[j]; // Pourquoi on les interdits, on a le droit de reutiliser les mêmes mouvements normalements.
+                if (nd->depth >= 1) {
+                    nd_child->move_interdit[j] = nd->move_interdit[j];// Pourquoi on les interdits, on a le droit de reutiliser les mêmes mouvements normalements.
+                }
             }
             nd_child->move_interdit[nd->depth - 1] = i_move;
             nd_child->depth = nd->depth + 1;
@@ -92,34 +94,36 @@ void completeTree(t_tree *tree, t_map map) {
 
 
 void auxiCompleteTree(t_node *nd, t_map map) {
-    if (nd!=NULL && nd->depth>4){
+    if (nd==NULL || nd->depth>4){
         return;
-    } else if (nd!=NULL){
-        for (int i=0 ; i<9-nd->depth ; i++){
-            int valid_child=1;
-            for (int j=0 ; j<nd->depth-1 ; j++){
+    } else {
+        for (int i = 0; i < 9 - nd->depth; i++) {
+            int valid_child = 1;
+            for (int j = 0; j < nd->depth - 1; j++) {
                 if (i == nd->move_interdit[j]) {  // Vérifier que le mouvement n'est pas interdit movesrobots[]
-                    valid_child=0;
+                    valid_child = 0;
                     break;
                 }
             }
-            if (valid_child){
+            if (valid_child) {
                 insertInTree(nd, i, map);
             }
         }
 
         for (int i = 0; i < nd->num_children; i++) {
-            if (nd->children[i]!=NULL) {
+            if (nd->children[i] != NULL) {
                 auxiCompleteTree(nd->children[i], map);
             }
         }
         return;
     }
+    return;
 }
 
 
 void displayTree(t_node *root, int depth) {
     if (root == NULL) {
+        printf("Tree is empty\n");
         return;
     } else {
         for (int i = 0; i < depth; i++) {
@@ -180,12 +184,11 @@ t_node *SearchLeafMin(t_tree tree) {
 
 void CheminRacineFeuilleAuxiliaire(t_node *node, t_node* target, t_node*** tab) {
     if (node == NULL) return;
-        
+
     for (int i = 0; i < node->num_children; i++) {
         CheminRacineFeuilleAuxiliaire(node->children[i], target, tab);
         if (node->children[i] == target) {
             (*tab)[node->depth] = target;
-            printf("%d ", node->children[i]->cost);
             CheminRacineFeuilleAuxiliaire((*tab)[0], node, tab);
         }
     }
@@ -198,7 +201,22 @@ t_node **CheminRacineFeuille(t_tree tree, t_node* target) {
 
    tab[0] = tree.root;
    tab[tree.height] = target;
-    
+
     CheminRacineFeuilleAuxiliaire(tree.root, target, &tab);
    return tab;
+}
+
+void freeTree(t_tree *tree){
+    freeTreeAuxi(tree->root);
+}
+
+void freeTreeAuxi(t_node *node){
+    for (int i=0;i<node->num_children;i++){
+        if (node->num_children>0) {
+            printf("%d  ", node->depth);
+            freeTreeAuxi(node->children[i]);
+        }
+    }
+    printf("a  ");
+    freeNode(node);
 }

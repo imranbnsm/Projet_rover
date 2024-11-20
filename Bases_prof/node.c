@@ -8,7 +8,7 @@
 
 t_node *createNode(t_localisation loc, int cost, int depth) // faut peut être intialise le champ move.
 {
-    t_node *node = (t_node *)malloc(2*sizeof(t_node));
+    t_node *node = (t_node *)malloc(sizeof(t_node));
     node->loc = loc;
     node->cost = cost;
     node->depth = depth;
@@ -28,4 +28,10 @@ void addChild(t_node *parent, t_node *child)
 void displayNode(t_node *node)
 {
     printf("Position: (%d, %d), Cost: %d, Depth: %d\n",node->loc.pos.x, node->loc.pos.y, node->cost, node->depth);
+}
+
+void freeNode (t_node *node){
+    free(node->children);
+    free(node->move_interdit);
+    free(node);
 }

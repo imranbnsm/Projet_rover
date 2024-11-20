@@ -22,11 +22,11 @@ void completeTree (t_tree *, t_map map);
 void auxiCompleteTree(t_node *node,t_map map);
 void displayTree(t_node *node, int level);
 void freeTree(t_tree *tree);
+void freeTreeAuxi(t_node *node);
 void SearchLeafMinAuxiliaire(t_node *node, t_node **min_cost_node, int *min_cost);
 t_node *SearchLeafMin(t_tree tree);
 void getMoves();
 t_node** CheminRacineFeuille(t_tree tree, t_node* node);
-
 
 
 
