@@ -178,47 +178,27 @@ t_node *SearchLeafMin(t_tree tree) {
 
 // chemin depuis la racine vers cette feuille.
 
-t_node** CheminRacineFeuille(t_tree tree, t_node* node) {
-
-    if (tree.root == NULL || node == NULL || tree.height <= 0) {
-        return NULL;
-    }
-
-
-    t_node** path = (t_node**)malloc((tree.height + 1) * sizeof(t_node*));
-    if (path == NULL) {
-        return NULL;  // Vérification de l'allocation mémoire
-    }
-
-    path[0] = tree.root;
-    min = 10000;
-    printf("%d ", path[0]->cost);
- 
-    t_node* current = tree.root;  // On commence à la racine
-    path[0] = current;
-    int i = 1;
-
-    // Tant que nous n'avons pas atteint une feuille
-    while (current->num_children > 0 && i <= tree.height) {
-        t_node* minNode = current->children[0];  // On commence par le premier enfant
-        int minCost = minNode->cost;
-
-        // On cherche le noeud avec le coût minimal parmi les enfants
-        for (int j = 0; j < current->num_children; j++) {
-            printf("%d ", current->children[j]->cost);
-            if (current->children[j]->cost < minCost) {
-                minCost = current->children[j]->cost;
-                minNode = current->children[j];
-            }
+void CheminRacineFeuilleAuxiliaire(t_node *node, t_node* target, t_node*** tab) {
+    if (node == NULL) return;
+        
+    for (int i = 0; i < node->num_children; i++) {
+        CheminRacineFeuilleAuxiliaire(node->children[i], target, tab);
+        if (node->children[i] == target) {
+            (*tab)[node->depth] = target;
+            printf("%d ", node->children[i]->cost);
+            CheminRacineFeuilleAuxiliaire((*tab)[0], node, tab);
         }
-
-        // On ajoute ce noeud au chemin
-        path[i] = minNode;
-        printf("       %d\n ", minNode->cost);  // Affichage du coût du noeud sélectionné
-        current = minNode;  // On met à jour le noeud courant pour la prochaine itération
-        i++;  // On incrémente l'indice du chemin
     }
 
-    path[i] = NULL;  // On marque la fin du chemin par un pointeur NULL
-    return path;  // On retourne le chemin
+}
+
+t_node **CheminRacineFeuille(t_tree tree, t_node* target) {
+
+   t_node **tab = (t_node **)malloc((tree.height + 1) * sizeof(t_node *));
+
+   tab[0] = tree.root;
+   tab[tree.height] = target;
+    
+    CheminRacineFeuilleAuxiliaire(tree.root, target, &tab);
+   return tab;
 }
