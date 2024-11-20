@@ -36,6 +36,7 @@ int main() {
     getMoves();
     t_tree tree = createTree(map);
     displayTree(tree.root,0);
-    t_node** path = CheminRacineFeuille(tree, tree.root);
+    t_node* MinNode = SearchLeafMin(tree);
+    t_node** path = CheminRacineFeuille(tree, MinNode);
     return 0;
 }
