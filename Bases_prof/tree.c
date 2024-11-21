@@ -30,7 +30,6 @@ void getMoves(){
 
 t_position generateRandomPosition(t_map map) {
     t_position randomPos;
-    //srand(time(NULL));
 
     do {
         randomPos.x = rand() % map.x_max;
@@ -41,7 +40,6 @@ t_position generateRandomPosition(t_map map) {
 }
 
 t_orientation generateRandomOrientation() {
-    //srand(time(NULL));
     return (t_orientation)(rand() % 4);
 }
 
@@ -94,12 +92,12 @@ void completeTree(t_tree *tree, t_map map) {
 
 
 void auxiCompleteTree(t_node *nd, t_map map) {
-    if (nd==NULL || nd->depth>4){
+    if (nd==NULL || nd->depth<1 || nd->depth==5){
         return;
     } else {
         for (int i = 0; i < 9 - nd->depth; i++) {
             int valid_child = 1;
-            for (int j = 0; j < nd->depth - 1; j++) {
+            for (int j = 0; j < nd->depth -1 ; j++) {
                 if (i == nd->move_interdit[j]) {  // Vérifier que le mouvement n'est pas interdit movesrobots[]
                     valid_child = 0;
                     break;
@@ -206,17 +204,35 @@ t_node **CheminRacineFeuille(t_tree tree, t_node* target) {
    return tab;
 }
 
-void freeTree(t_tree *tree){
-    freeTreeAuxi(tree->root);
+void freeTree(t_node *root) {
+    if (root == NULL) {
+        return; // Rien à libérer
+    }
+
+    // Libération récursive des enfants
+    for (int i = 0; i < root->num_children; i++) {
+        freeTree(root->children[i]);
+    }
+
+    // Libération des structures internes du nœud
+    free(root->children);      // Libère le tableau des enfants
+    free(root->move_interdit); // Libère le tableau des mouvements interdits
+
+    // Libération du nœud lui-même
+    free(root);
 }
 
-void freeTreeAuxi(t_node *node){
-    for (int i=0;i<node->num_children;i++){
-        if (node->num_children>0) {
-            printf("%d  ", node->depth);
-            freeTreeAuxi(node->children[i]);
+
+/*void freeTreeAuxi(t_node *node){
+    if (node==NULL){
+        return;
+    }else {
+        for (int i = 0; i < node->num_children; i++) {
+            if (node->num_children > 0){
+                freeTreeAuxi(node->children[i]);
+            }
         }
+        freeNode(node);
+        return;
     }
-    printf("a  ");
-    freeNode(node);
-}
+}*/

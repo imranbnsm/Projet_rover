@@ -12,6 +12,7 @@ t_node *createNode(t_localisation loc, int cost, int depth) // faut peut être i
     node->loc = loc;
     node->cost = cost;
     node->depth = depth;
+    node->children=NULL;
     node->children = (t_node**) malloc(depth*sizeof(t_node*));   // Pas d'enfants au début
     node->num_children = 0;   // Pas d'enfants
     node->move_interdit = malloc(depth*sizeof(int));
@@ -34,4 +35,5 @@ void freeNode (t_node *node){
     free(node->children);
     free(node->move_interdit);
     free(node);
+    return;
 }

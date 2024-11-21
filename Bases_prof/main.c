@@ -35,13 +35,13 @@ int main() {
     displayMap(map);
     getMoves();
     t_tree tree = createTree(map);
-    //displayTree(tree.root,0);
+    displayTree(tree.root,0);
     //t_node* MinNode = SearchLeafMin(tree);
     //t_node** path = CheminRacineFeuille(tree, MinNode);
     /*for (int i=0;i<5;i++){
         printf("%s %d\n", getMoveAsString(path[i]->move),path[i]->cost);
     }*/
-    //freeTree(&tree);
-    //displayTree(tree.root,0);
+    freeTree(tree.root);
+    displayTree(tree.root,0);
     return 0;
 }
