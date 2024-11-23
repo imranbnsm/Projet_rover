@@ -243,8 +243,6 @@ void SearchLeafMinAuxiliaire(t_node *node, t_node **min_cost_node, int *min_cost
     for (int i = 0; i < node->num_children; i++) {
         SearchLeafMinAuxiliaire(node->children[i], min_cost_node, min_cost);    // On appelle la fonction recursivement pour trouver le noeud avec le coût le plus bas.
     }
-    return;
-
 }
 
 
@@ -255,7 +253,7 @@ et la position finale où l'on veut être c'est à dire la station de base */
 
 t_node *SearchLeafMin(t_tree tree) {
     t_node *min_cost_node = NULL;     // Noeud avec le cout minimum.
-    int min_cost = 10000;         
+    int min_cost = tree.root->cost;
 
     // Appelle de la fonction auxiliaire pour rechercher le noeud feuille avec le coût minimum
     
@@ -283,20 +281,20 @@ void CheminRacineFeuilleAuxiliaire(t_node *node, t_node* target, t_node*** tab) 
 }
 
 
-t_node **CheminRacineFeuille(t_tree tree, t_node* target) {
+t_node **CheminRacineFeuille(t_tree tree) {
 
    t_node **tab = (t_node **)malloc((tree.height + 1) * sizeof(t_node *));
+   t_node *target = SearchLeafMin(tree);
 
    tab[0] = tree.root;
    tab[tree.height] = target;
 
-    CheminRacineFeuilleAuxiliaire(tree.root, target, &tab);
+   CheminRacineFeuilleAuxiliaire(tree.root, target, &tab);
    return tab;
 }
 
 
 void freeTree(t_node *root) {
-
     if (root == NULL) {
         return; // Rien à libérer
     }
@@ -313,28 +311,13 @@ void freeTree(t_node *root) {
     free(root->move_interdit); // Libère le tableau des mouvements interdits
 
     // Libération du nœud lui-même
-    if (root->children==NULL) {
-        free(root);
-    }
+    free(root);
 }
 
 
-
-
-/*void freeTreeAuxi(t_node *node){
-    if (node==NULL){
-        return;
-    }else {
-        for (int i = 0; i < node->num_children; i++) {
-            if (node->num_children > 0){
-                freeTreeAuxi(node->children[i]);
-            }
-        }
-        freeNode(node);
-        return;
-    }
-}*/
-
+char* getOrientation (int ori){
+    return _orientation[ori];
+}
 
 void play(t_map map) {
     t_tree tree;
@@ -343,7 +326,7 @@ void play(t_map map) {
     // Faire apparaître le robot à un endroit de la carte
     robot.pos = generateRandomPosition(map);
     robot.ori = generateRandomOrientation();
-    printf("Robot initialise a la position (%d, %d) avec orientation %d.\n", robot.pos.x, robot.pos.y, robot.ori);
+    printf("Robot initialise a la position (%d, %d) avec orientation %s.\n", robot.pos.x, robot.pos.y, getOrientation(robot.ori));
 
     // Vérifiez le type de terrain initial
     int initial_terrain_type = map.soils[robot.pos.y][robot.pos.x];
@@ -360,7 +343,7 @@ void play(t_map map) {
 
     while (1) {
         // Trouver la feuille de plus bas coût et s'y déplacer
-        t_node ** path = CheminRacineFeuille(tree, SearchLeafMin(tree));
+        t_node ** path = CheminRacineFeuille(tree);
         // Vérifier le type de terrain actuel
         int terrain_type = map.soils[robot.pos.y][robot.pos.x];
         int is_on_erg = (terrain_type == 2);
