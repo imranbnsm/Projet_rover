@@ -15,18 +15,19 @@ typedef struct s_tree
     int height;
 } t_tree;
 
-t_tree createTree(t_map map);
+t_tree createTree(t_map map,int,int);
 t_node *searchNode(t_tree tree, t_localisation loc);
-void insertInTree(t_node *nd, int move, t_map map);
-void completeTree (t_tree *, t_map map);
-void auxiCompleteTree(t_node *node,t_map map);
+void insertInTree(t_node *nd, int move, t_map map,int);
+void completeTree (t_tree *, t_map map, int);
+void auxiCompleteTree(t_node *node,t_map map,int);
 void displayTree(t_node *node, int level);
 void freeTree(t_node *root);
 void freeTreeAuxi(t_node *node);
 void SearchLeafMinAuxiliaire(t_node *node, t_node **min_cost_node, int *min_cost);
 t_node *SearchLeafMin(t_tree tree);
-void getMoves();
+void getMoves(int);
 t_node** CheminRacineFeuille(t_tree tree, t_node* node);
+void play(t_map);
 
 
 

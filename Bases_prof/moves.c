@@ -128,6 +128,9 @@ t_localisation translate(t_localisation loc, t_move move)
                     break;
             }
             break;
+        case NONE:
+            res.y = loc.pos.y;
+            res.x = loc.pos.x;
         default:
             break;
     }

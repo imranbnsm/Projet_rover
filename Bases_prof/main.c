@@ -2,7 +2,7 @@
 #include "map.h"
 #include "tree.h"
 
-int main() {
+void main() {
     t_map map;
 
     // The following preprocessor directive checks if the code is being compiled on a Windows system.
@@ -32,16 +32,10 @@ int main() {
         }
         printf("\n");
     }
+
     displayMap(map);
-    getMoves();
-    t_tree tree = createTree(map);
-    displayTree(tree.root,0);
-    //t_node* MinNode = SearchLeafMin(tree);
-    //t_node** path = CheminRacineFeuille(tree, MinNode);
-    /*for (int i=0;i<5;i++){
-        printf("%s %d\n", getMoveAsString(path[i]->move),path[i]->cost);
-    }*/
-    freeTree(tree.root);
-    displayTree(tree.root,0);
-    return 0;
+
+    play(map);
+
+
 }
