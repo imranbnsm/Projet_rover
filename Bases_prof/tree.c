@@ -85,56 +85,6 @@ void getMoves(int is_on_erg) {
 }
 
 
-//pour le move en string appeler fonction movesAstring dans moves.c
-
-/*void getMoves(int is_on_erg){
-
-    movesrobot = (t_move *)malloc(9 * sizeof(t_move));
-
-    if (movesrobot == NULL) {
-        fprintf(stderr, "Erreur d'allocation de mémoire pour movesrobot.\n");
-        exit(EXIT_FAILURE);
-    }
-
-    int dispo_moves[] = {22, 15, 7, 7, 21, 21, 7};
-
-    for(int i = 0; i<9; i++){
-        int indice = rand()%7;
-        movesrobot[i] = moves[indice];
-        dispo_moves[indice]--;
-    }
-    // Si le robot est sur une case erg, adapter les mouvements
-    if (is_on_erg) {
-        for (int i = 0; i < 9; i++) {
-            switch (movesrobot[i]) {
-                case F_10:
-                    // Ne fait rien
-                    movesrobot[i] = NONE; // Ou une autre valeur représentant un mouvement invalide
-                    break;
-                case F_20:
-                    // N'avance que de 10m
-                    movesrobot[i] = F_10;
-                    break;
-                case F_30:
-                    // N'avance que de 20m
-                    movesrobot[i] = F_20;
-                    break;
-                case B_10:
-                    // Ne fait rien
-                    movesrobot[i] = NONE; // Ou une autre valeur représentant un mouvement invalide
-                    break;
-                case U_TURN:
-                    // Ne pas tourner
-                    movesrobot[i] = T_RIGHT; // Ou une autre valeur représentant un mouvement invalide
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-}*/ //ne prend pas en compte les probas
-
-
 
 
 t_position generateRandomPosition(t_map map) {
@@ -151,24 +101,6 @@ t_position generateRandomPosition(t_map map) {
 t_orientation generateRandomOrientation() {
     return (t_orientation)(rand() % 4);
 }
-
-
-
-
-
-/*t_tree createTree(t_map map,int available_moves)
-{
-    t_tree tree;
-    t_localisation robot;
-    getMoves();
-    robot.pos = generateRandomPosition(map);
-    robot.ori = generateRandomOrientation();
-    int cost = map.costs[robot.pos.y][robot.pos.x];
-    tree.root = createNode(robot, cost, 0);
-    completeTree(&tree,map,available_moves);
-    return tree;
-}FONCTION DE BASE*/
-
 
 
 
@@ -192,48 +124,6 @@ t_tree createTree(t_map map, int available_moves) {
 
     return tree;
 }
-
-
-
-
-/*void insertInTree(t_node *nd, int i_move, t_map map) {
-
-    if (nd != NULL) {
-
-        t_localisation new_pos = move(nd->loc, movesrobot[i_move]);
-
-        if (isValidLocalisation(new_pos.pos, map.x_max, map.y_max) && nd->cost < 10000) {
-
-            int cost = map.costs[new_pos.pos.y][new_pos.pos.x];
-            t_node *nd_child = createNode(new_pos, cost, nd->depth + 1);
-
-            if (nd_child == NULL) {
-
-                printf("Error: Failed to create child node.\n");
-                return;
-
-            }
-
-            addChild(nd, nd_child);
-            nd_child->move = movesrobot[i_move];
-
-            if (nd->move_interdit != NULL) {
-
-                for (int j = 0; j < nd->depth - 1; j++) {
-
-                    if (nd->depth >= 1) {
-
-                        nd_child->move_interdit[j] = nd->move_interdit[j];
-                    }
-                }
-            }
-
-            nd_child->move_interdit[nd->depth - 1] = i_move;
-            nd_child->depth = nd->depth + 1;
-        }
-    }
-} FONCTION DE BASE*/
-
 
 
 
