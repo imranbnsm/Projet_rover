@@ -8,6 +8,7 @@
 #include "node.h"
 #include "map.h"
 #include "moves.h"
+static char _orientation[8][8] = {"Nord","Est","Sud","Ouest"};
 
 typedef struct s_tree
 {
@@ -22,7 +23,7 @@ void completeTree (t_tree *, t_map map, int);
 void auxiCompleteTree(t_node *node,t_map map,int);
 void displayTree(t_node *node, int level);
 void freeTree(t_node *root);
-//void freeTreeAuxi(t_node *node);
+char* getOrientation(int ori);
 void SearchLeafMinAuxiliaire(t_node *node, t_node **min_cost_node, int *min_cost);
 t_node *SearchLeafMin(t_tree tree);
 void getMoves(int);
