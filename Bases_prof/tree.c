@@ -98,6 +98,7 @@ t_orientation generateRandomOrientation() {
 t_tree createTree(t_map map, int available_moves, int is_on_erg) {
     t_tree tree;
     t_localisation robot;
+    tree.height = available_moves;
     getMoves(is_on_erg); // Passer l'état de la case erg
     robot.pos = generateRandomPosition(map);
     robot.ori = generateRandomOrientation();
@@ -132,6 +133,7 @@ void insertInTree(t_node *nd, int i_move, t_map map, int available_moves) {
 
             nd_child->move_interdit[nd->depth - 1] = i_move;
             nd_child->depth = nd->depth + 1;
+
         }
     }
 }
@@ -298,10 +300,12 @@ void freeTree(t_node *root) {
     if (root == NULL) {
         return; // Rien à libérer
     }
-
+    printf("%d ",root->num_children);
     // Libération récursive des enfants
     for (int i = 0; i < root->num_children; i++) {
-        freeTree(root->children[i]);
+        if (root->children[i]!=NULL){
+            freeTree(root->children[i]);
+        }
     }
 
     // Libération des structures internes du nœud
@@ -339,7 +343,7 @@ void play(t_map map) {
     // Faire apparaître le robot à un endroit de la carte
     robot.pos = generateRandomPosition(map);
     robot.ori = generateRandomOrientation();
-    printf("Robot initialisé à la position (%d, %d) avec orientation %d.\n", robot.pos.x, robot.pos.y, robot.ori);
+    printf("Robot initialise a la position (%d, %d) avec orientation %d.\n", robot.pos.x, robot.pos.y, robot.ori);
 
     // Vérifiez le type de terrain initial
     int initial_terrain_type = map.soils[robot.pos.y][robot.pos.x];
@@ -367,20 +371,22 @@ void play(t_map map) {
 
             // Mettre à jour la position du robot en fonction du mouvement choisi
             robot = move(robot, path[i]->move);
+            printf("%d %d\n",robot.pos.x,robot.pos.y);
+            printf("%d\n",path[i]->cost);
         }
 
         // Vérifier si le robot a atteint la base
         if (map.costs[robot.pos.y][robot.pos.x] == 0) {
-            printf("C'est gagné !\n");
+            printf("C'est gagne !\n");
             break;
         }
 
         // Libérer la mémoire allouée
-        freeTree(tree.root);
+        //freeTree(tree.root);
         // Créer un nouvel arbre pour le prochain mouvement
         tree = createTree(map, available_moves,is_on_erg);
     }
 
     // Libérer la mémoire allouée
-    freeTree(tree.root);
+    //freeTree(tree.root);
 }
