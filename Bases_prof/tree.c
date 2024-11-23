@@ -14,20 +14,6 @@ t_move moves[] = { F_10, F_20, F_30, B_10, T_LEFT, T_RIGHT, U_TURN};
 t_move *movesrobot;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void getMoves(int is_on_erg) {
     // Allouer de la mémoire pour les mouvements
     movesrobot = (t_move *)malloc(9 * sizeof(t_move));
@@ -118,7 +104,7 @@ t_tree createTree(t_map map, int available_moves) {
 
     getMoves(is_on_erg); // Passer l'état de la case erg
 
-    printf("Robot initialise a la position (%d, %d) avec orientation %d.\n", robot.pos.x, robot.pos.y, robot.ori);
+    printf("Robot initialise a la position (%d, %d) avec orientation %s.\n", robot.pos.x, robot.pos.y, getOrientation((robot.ori)));
 
     completeTree(&tree, map, available_moves);
 
@@ -126,14 +112,10 @@ t_tree createTree(t_map map, int available_moves) {
 }
 
 
-
-
-
-
 void insertInTree(t_node *nd, int i_move, t_map map, int available_moves) {
     if (nd != NULL) {
         // Vérifiez si l'indice de mouvement est valide
-        if (i_move >= available_moves) {
+        if (nd->depth >= available_moves) {
             return;
         }
 
@@ -166,12 +148,6 @@ void insertInTree(t_node *nd, int i_move, t_map map, int available_moves) {
 }
 
 
-
-
-
-
-
-
 void completeTree(t_tree *tree, t_map map, int available_moves) {
 
     if (tree != NULL && tree->root != NULL) {
@@ -191,8 +167,6 @@ void completeTree(t_tree *tree, t_map map, int available_moves) {
         }
     }
 }
-
-
 
 
 void auxiCompleteTree(t_node *nd, t_map map, int available_moves) {
@@ -234,10 +208,7 @@ void auxiCompleteTree(t_node *nd, t_map map, int available_moves) {
         }
         return;
     }
-    return;
 }
-
-
 
 
 void displayTree(t_node *root, int depth) {
@@ -257,9 +228,6 @@ void displayTree(t_node *root, int depth) {
     }
     return;
 }
-
-
-
 
 
 // recherche d'une feuille de valeur minimale 
@@ -290,8 +258,6 @@ void SearchLeafMinAuxiliaire(t_node *node, t_node **min_cost_node, int *min_cost
 }
 
 
-
-
 /* On va creer une fonction qui va nous donner la feuille avec la valeur la plus petite, pour faire ça on va prendre en argument l'arbre en question, 
 et la position finale où l'on veut être c'est à dire la station de base */
 
@@ -304,9 +270,6 @@ t_node *SearchLeafMin(t_tree tree) {
    SearchLeafMinAuxiliaire(tree.root, &min_cost_node, &min_cost);
    return min_cost_node;
 }
-
-
-
 
 
 // chemin depuis la racine vers cette feuille.
@@ -325,9 +288,6 @@ void CheminRacineFeuilleAuxiliaire(t_node *node, t_node* target, t_node*** tab) 
 }
 
 
-
-
-
 t_node **CheminRacineFeuille(t_tree tree, t_node* target) {
 
    t_node **tab = (t_node **)malloc((tree.height + 1) * sizeof(t_node *));
@@ -338,9 +298,6 @@ t_node **CheminRacineFeuille(t_tree tree, t_node* target) {
     CheminRacineFeuilleAuxiliaire(tree.root, target, &tab);
    return tab;
 }
-
-
-
 
 
 void freeTree(t_node *root) {
@@ -372,6 +329,9 @@ void freeTree(t_node *root) {
 }
 
 
+char* getOrientation (int ori){
+    return _orientation[ori];
+}
 
 /*void freeTree(t_node *root){
     if (root==NULL){
@@ -392,7 +352,6 @@ void play(t_map map) {
 
     double tempsInitial = clock();
 
-
     srand(time(NULL));
 
     // Déterminez le nombre de mouvements disponibles
@@ -403,15 +362,15 @@ void play(t_map map) {
 
     int win = 0;
 
-    while (! win) {
+    while (1) {
 
-        int available_moves = 5;
+        available_moves = 5;
 
-        // Trouver la feuille de plus bas coût et s'y déplacer
-        t_node* leaf_node = SearchLeafMin(tree);
+
 
         double debut = clock(); // temps de début
-        leaf_node = SearchLeafMin(tree);
+        // Trouver la feuille de plus bas coût et s'y déplacer
+        t_node* leaf_node = SearchLeafMin(tree);
         double fin = clock(); // temps de fin
         double temps = fin-debut;
         printf("La fonction SearchLeafMin prend %.6f millisecondes\n", temps);
@@ -480,7 +439,6 @@ void play(t_map map) {
 
 
     // Libérer la mémoire allouée
-    //freeTree(tree.root);
     //freeTree(tree.root);
 
     double tempsFinal = clock();
