@@ -321,6 +321,7 @@ char* getOrientation (int ori){
 }
 
 void play(t_map map) {
+    double tempsInitial = clock();
     t_tree tree;
     t_localisation robot;
 
