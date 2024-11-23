@@ -35,7 +35,10 @@ void main() {
 
     displayMap(map);
 
-    play(map);
+    //play(map);
+    t_tree tree = createTree(map,5,0);
+    displayTree(tree.root,0);
+    //freeTree(tree.root);
 
-
+    return;
 }

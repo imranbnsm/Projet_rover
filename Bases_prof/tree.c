@@ -13,25 +13,51 @@
 t_move moves[] = { F_10, F_20, F_30, B_10, T_LEFT, T_RIGHT, U_TURN};
 t_move *movesrobot;
 
-
 //pour le move en string appeler fonction movesAstring dans moves.c
 
 void getMoves(int is_on_erg){
     movesrobot = (t_move *)malloc(9 * sizeof(t_move));
 
-    if (movesrobot == NULL) {
-        fprintf(stderr, "Erreur d'allocation de mémoire pour movesrobot.\n");
-        exit(EXIT_FAILURE);
-    }
-
     srand(time(NULL));
     int dispo_moves[] = {22, 15, 7, 7, 21, 21, 7};
+    int total_moves=100;
 
-    for(int i = 0; i<9; i++){
-        int indice = rand()%7;
-        movesrobot[i] = moves[indice];
-        dispo_moves[indice]--;
+    /*for (int i = 0; i < 9 ; i++)
+    {
+        int r = rand() % total_moves;
+        int type=0;
+        while (r >= dispo_moves[type])
+        {
+            r -= dispo_moves[type];
+            type++;
+        }
+        dispo_moves[type]--;
+        total_moves--;
+        movesrobot[i] = (t_move )type;
+    }*/
+    for (int i = 0; i < 9; i++) {
+        int r = rand() % total_moves;  // Sélectionne un numéro aléatoire
+        int type = 0;
+
+        // Parcourir les types de mouvements pour trouver celui correspondant
+        while (r >= dispo_moves[type]) {
+            r -= dispo_moves[type];
+            type++;
+        }
+
+        // Ajouter le mouvement choisi à la liste
+        movesrobot[i] = moves[type];
+
+        // Mettre à jour les disponibilités
+        dispo_moves[type]--;
+        total_moves--;
+
     }
+
+    for (int i=0;i<9;i++){
+        printf("%s ", getMoveAsString(movesrobot[i]));
+    }
+
     // Si le robot est sur une case erg, adapter les mouvements
     if (is_on_erg) {
         for (int i = 0; i < 9; i++) {
@@ -52,20 +78,20 @@ void getMoves(int is_on_erg){
                     // Ne fait rien
                     movesrobot[i] = NONE; // Ou une autre valeur représentant un mouvement invalide
                     break;
-                case T_LEFT:
-                    break;
-                case T_RIGHT:
-                    break;
                 case U_TURN:
                     // Ne pas tourner
-                    movesrobot[i] = T_RIGHT; // Ou une autre valeur représentant un mouvement invalide
+                    if (rand()%2==1) {
+                        movesrobot[i] = T_RIGHT; // Ou une autre valeur représentant un mouvement invalide
+                    } else {
+                        movesrobot[i] = T_LEFT;
+                    }
                     break;
                 default:
                     break;
             }
         }
     }
-} //ne prend pas en compte les probas
+}
 
 
 
@@ -86,25 +112,6 @@ t_orientation generateRandomOrientation() {
 }
 
 
-
-
-
-/*t_tree createTree(t_map map,int available_moves)
-{
-    t_tree tree;
-    t_localisation robot;
-    getMoves();
-    robot.pos = generateRandomPosition(map);
-    robot.ori = generateRandomOrientation();
-    int cost = map.costs[robot.pos.y][robot.pos.x];
-    tree.root = createNode(robot, cost, 0);
-    completeTree(&tree,map,available_moves);
-    return tree;
-}FONCTION DE BASE*/
-
-
-
-
 t_tree createTree(t_map map, int available_moves, int is_on_erg) {
     t_tree tree;
     t_localisation robot;
@@ -118,69 +125,16 @@ t_tree createTree(t_map map, int available_moves, int is_on_erg) {
 }
 
 
-
-
-/*void insertInTree(t_node *nd, int i_move, t_map map) {
-
-    if (nd != NULL) {
-
-        t_localisation new_pos = move(nd->loc, movesrobot[i_move]);
-
-        if (isValidLocalisation(new_pos.pos, map.x_max, map.y_max) && nd->cost < 10000) {
-
-            int cost = map.costs[new_pos.pos.y][new_pos.pos.x];
-            t_node *nd_child = createNode(new_pos, cost, nd->depth + 1);
-
-            if (nd_child == NULL) {
-
-                printf("Error: Failed to create child node.\n");
-                return;
-
-            }
-
-            addChild(nd, nd_child);
-            nd_child->move = movesrobot[i_move];
-
-            if (nd->move_interdit != NULL) {
-
-                for (int j = 0; j < nd->depth - 1; j++) {
-
-                    if (nd->depth >= 1) {
-
-                        nd_child->move_interdit[j] = nd->move_interdit[j];
-                    }
-                }
-            }
-
-            nd_child->move_interdit[nd->depth - 1] = i_move;
-            nd_child->depth = nd->depth + 1;
-        }
-    }
-} FONCTION DE BASE*/
-
-
-
-
-
-
-
 void insertInTree(t_node *nd, int i_move, t_map map, int available_moves) {
+
     if (nd != NULL) {
         // Vérifiez si l'indice de mouvement est valide
-        if (i_move >= available_moves) {
-            return;
-        }
 
         t_localisation new_pos = move(nd->loc, movesrobot[i_move]);
 
         if (isValidLocalisation(new_pos.pos, map.x_max, map.y_max) && nd->cost < 10000) {
             int cost = map.costs[new_pos.pos.y][new_pos.pos.x];
             t_node *nd_child = createNode(new_pos, cost, nd->depth + 1);
-
-            if (nd_child == NULL) {
-                printf("Error: Failed to create child node.\n");
-                return;
-            }
 
             addChild(nd, nd_child);
             nd_child->move = movesrobot[i_move];
@@ -198,12 +152,6 @@ void insertInTree(t_node *nd, int i_move, t_map map, int available_moves) {
         }
     }
 }
-
-
-
-
-
-
 
 
 void completeTree(t_tree *tree, t_map map, int available_moves) {
@@ -227,11 +175,9 @@ void completeTree(t_tree *tree, t_map map, int available_moves) {
 }
 
 
-
-
 void auxiCompleteTree(t_node *nd, t_map map, int available_moves) {
 
-    if (nd==NULL || nd->depth<1 || nd->depth==5){
+    if (nd==NULL || nd->depth<1 || nd->depth >= available_moves){
 
         return;
 
@@ -268,10 +214,7 @@ void auxiCompleteTree(t_node *nd, t_map map, int available_moves) {
         }
         return;
     }
-    return;
 }
-
-
 
 
 void displayTree(t_node *root, int depth) {
@@ -291,10 +234,6 @@ void displayTree(t_node *root, int depth) {
     }
     return;
 }
-
-
-
-
 
 // recherche d'une feuille de valeur minimale 
 
@@ -359,9 +298,6 @@ void CheminRacineFeuilleAuxiliaire(t_node *node, t_node* target, t_node*** tab) 
 }
 
 
-
-
-
 t_node **CheminRacineFeuille(t_tree tree, t_node* target) {
 
    t_node **tab = (t_node **)malloc((tree.height + 1) * sizeof(t_node *));
@@ -374,10 +310,8 @@ t_node **CheminRacineFeuille(t_tree tree, t_node* target) {
 }
 
 
-
-
-
 void freeTree(t_node *root) {
+
     if (root == NULL) {
         return; // Rien à libérer
     }
@@ -392,7 +326,9 @@ void freeTree(t_node *root) {
     free(root->move_interdit); // Libère le tableau des mouvements interdits
 
     // Libération du nœud lui-même
-    free(root);
+    if (root->children==NULL) {
+        free(root);
+    }
 }
 
 
@@ -415,7 +351,6 @@ void freeTree(t_node *root) {
 
 void play(t_map map) {
     t_tree tree;
-    t_node *leaf_node;
     t_localisation robot;
 
     // Faire apparaître le robot à un endroit de la carte
@@ -435,60 +370,21 @@ void play(t_map map) {
     // Créer l'arbre associé à sa position
     tree = createTree(map, available_moves, initial_terrain_type == ERG); // Passer si sur erg
 
+
     while (1) {
         // Trouver la feuille de plus bas coût et s'y déplacer
-        leaf_node = SearchLeafMin(tree);
-        if (leaf_node == NULL) {
-            printf("Aucune feuille valide trouvée.\n");
-            break;
-        }
-
-        // Afficher le mouvement choisi
-        printf("Mouvement choisi: %s\n", getMoveAsString(leaf_node->move));
-
+        t_node ** path = CheminRacineFeuille(tree, SearchLeafMin(tree));
         // Vérifier le type de terrain actuel
         int terrain_type = map.soils[robot.pos.y][robot.pos.x];
         int is_on_erg = (terrain_type == 2);
 
-        // Gérer les conséquences si le robot commence sur une case erg
-        if (is_on_erg) {
-            printf("Robot commence sur un erg.\n");
+        for (int i=0 ; i<tree.height+1 ; i++) {
+            // Afficher le mouvement choisi
+            printf("Mouvement choisi: %s\n", getMoveAsString(path[i]->move));
 
-            // Appliquer les effets des mouvements
-            switch (leaf_node->move) {
-                case F_10:
-                    // Ne fait rien
-                    printf("Mouvement F_10 n'a pas d'effet sur l'erg.\n");
-                    break;
-                case F_20:
-                    // N'avance que de 10m
-                    robot = move(robot, F_10);
-                    printf("Mouvement F_20 n'avance que de 10m.\n");
-                    break;
-                case F_30:
-                    // N'avance que de 20m
-                    robot = move(robot, F_20);
-                    printf("Mouvement F_30 n'avance que de 20m.\n");
-                    break;
-                case B_10:
-                    // Ne fait rien
-                    printf("Mouvement B_10 n'a pas d'effet sur l'erg.\n");
-                    break;
-                case T_LEFT:
-                case T_RIGHT:
-                    // Ne pas tourner
-                    printf("Mouvement de rotation n'est pas permis sur un erg.\n");
-                    break;
-                case U_TURN:
-                    // Ne pas tourner
-                    printf("Mouvement U_TURN n'est pas permis sur un erg.\n");
-                    break;
-            }
-            break;
+            // Mettre à jour la position du robot en fonction du mouvement choisi
+            robot = move(robot, path[i]->move);
         }
-
-        // Mettre à jour la position du robot en fonction du mouvement choisi
-        robot = move(robot, leaf_node->move);
 
         // Vérifier si le robot a atteint la base
         if (map.costs[robot.pos.y][robot.pos.x] == 0) {
