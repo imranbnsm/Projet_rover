@@ -343,7 +343,7 @@ t_node **CheminRacineFeuille(t_tree tree, t_node* target) {
 
 
 
-void freeTree(t_node *root) {
+/*void freeTree(t_node *root) {
     if (root == NULL) {
         return; // Rien à libérer
     }
@@ -369,11 +369,11 @@ void freeTree(t_node *root) {
     }
 
     free(root);
-}
+}*/
 
 
 
-/*void freeTree(t_node *root){
+void freeTree(t_node *root){
     if (root==NULL){
         return;
     }else {
@@ -382,10 +382,11 @@ void freeTree(t_node *root) {
                 freeTree(root->children[i]);
             }
         }
+        free(root->children);
         free(root);
         return;
     }
-}*/
+}
 
 
 void play(t_map map) {
@@ -458,10 +459,12 @@ void play(t_map map) {
             available_moves = 4;
         }
 
+        freeTree(tree.root);
+
         break;
 
         // Libérer la mémoire allouée
-        freeTree(tree.root);
+
 
         debut = clock(); // temps de début
         //freeTree(tree.root);
