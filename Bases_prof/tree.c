@@ -381,6 +381,7 @@ void play(t_map map) {
         tree = createTree(map, available_moves,is_on_erg,robot);
     }
 
+
     // Libérer la mémoire allouée
     freeTree(tree.root);
     double tempsFinal = clock();
