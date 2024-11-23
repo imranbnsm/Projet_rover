@@ -22,19 +22,6 @@ void getMoves(int is_on_erg){
     int dispo_moves[] = {22, 15, 7, 7, 21, 21, 7};
     int total_moves=100;
 
-    /*for (int i = 0; i < 9 ; i++)
-    {
-        int r = rand() % total_moves;
-        int type=0;
-        while (r >= dispo_moves[type])
-        {
-            r -= dispo_moves[type];
-            type++;
-        }
-        dispo_moves[type]--;
-        total_moves--;
-        movesrobot[i] = (t_move )type;
-    }*/
     for (int i = 0; i < 9; i++) {
         int r = rand() % total_moves;  // Sélectionne un numéro aléatoire
         int type = 0;
@@ -52,10 +39,6 @@ void getMoves(int is_on_erg){
         dispo_moves[type]--;
         total_moves--;
 
-    }
-
-    for (int i=0;i<9;i++){
-        printf("%s ", getMoveAsString(movesrobot[i]));
     }
 
     // Si le robot est sur une case erg, adapter les mouvements

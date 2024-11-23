@@ -2,7 +2,7 @@
 #include "map.h"
 #include "tree.h"
 
-void main() {
+int main() {
     t_map map;
 
     // The following preprocessor directive checks if the code is being compiled on a Windows system.
@@ -38,7 +38,7 @@ void main() {
     //play(map);
     t_tree tree = createTree(map,5,0);
     displayTree(tree.root,0);
-    //freeTree(tree.root);
+    freeTree(tree.root);
 
-    return;
+    return 0;
 }
