@@ -13,6 +13,7 @@
 
 t_move moves[] = { F_10, F_20, F_30, B_10, T_LEFT, T_RIGHT, U_TURN};
 t_move *movesrobot;
+int length_path=0;
 
 //pour le move en string appeler fonction movesAstring dans moves.c
 
@@ -96,13 +97,10 @@ t_orientation generateRandomOrientation() {
 }
 
 
-t_tree createTree(t_map map, int available_moves, int is_on_erg) {
+t_tree createTree(t_map map, int available_moves, int is_on_erg, t_localisation robot) {
     t_tree tree;
-    t_localisation robot;
     tree.height = available_moves;
     getMoves(is_on_erg); // Passer l'état de la case erg
-    robot.pos = generateRandomPosition(map);
-    robot.ori = generateRandomOrientation();
     int cost = map.costs[robot.pos.y][robot.pos.x];
     tree.root = createNode(robot, cost, 0);
     completeTree(&tree, map, available_moves);
@@ -254,7 +252,7 @@ et la position finale où l'on veut être c'est à dire la station de base */
 
 t_node *SearchLeafMin(t_tree tree) {
     t_node *min_cost_node = NULL;     // Noeud avec le cout minimum.
-    int min_cost = tree.root->cost;
+    int min_cost = 10000;
 
     // Appelle de la fonction auxiliaire pour rechercher le noeud feuille avec le coût minimum
     
@@ -284,12 +282,13 @@ void CheminRacineFeuilleAuxiliaire(t_node *node, t_node* target, t_node*** tab) 
 
 t_node **CheminRacineFeuille(t_tree tree) {
 
-   t_node **tab = (t_node **)malloc((tree.height + 1) * sizeof(t_node *));
-   t_node *target = SearchLeafMin(tree);
+    t_node *target = SearchLeafMin(tree);
+    t_node **tab = (t_node **)malloc((target->depth) * sizeof(t_node *));
+
 
    tab[0] = tree.root;
-   tab[tree.height] = target;
-
+   tab[target->depth-1] = target;
+   length_path=target->depth;
    CheminRacineFeuilleAuxiliaire(tree.root, target, &tab);
    return tab;
 }
@@ -341,14 +340,15 @@ void play(t_map map) {
 
     // Créer l'arbre associé à sa position
     double debut = clock(); // temps de début
-    tree = createTree(map, available_moves, initial_terrain_type == ERG); // Passer si sur erg
+    tree = createTree(map, available_moves, initial_terrain_type == ERG,robot); // Passer si sur erg
     double fin = clock(); // temps de fin
     double temps = fin-debut;
-    printf("La fonction CreateTree prend %.6f millisecondes\n", temps);
+    printf("La fonction CreateTree prend %.8f millisecondes\n", temps);
 
 
     while (1) {
         // Trouver la feuille de plus bas coût et s'y déplacer
+        displayTree(tree.root,0);
         debut = clock(); // temps de début
         t_node ** path = CheminRacineFeuille(tree);
         fin = clock(); // temps de fin
@@ -359,14 +359,12 @@ void play(t_map map) {
         int terrain_type = map.soils[robot.pos.y][robot.pos.x];
         int is_on_erg = (terrain_type == 2);
 
-        for (int i=0 ; i<tree.height+1 ; i++) {
+        for (int i=0 ; i<length_path ; i++) {
             // Afficher le mouvement choisi
             printf("Mouvement choisi: %s\n", getMoveAsString(path[i]->move));
 
             // Mettre à jour la position du robot en fonction du mouvement choisi
             robot = move(robot, path[i]->move);
-            printf("%d %d\n",robot.pos.x,robot.pos.y);
-            printf("%d\n",path[i]->cost);
         }
 
         // Vérifier si le robot a atteint la base
@@ -375,14 +373,16 @@ void play(t_map map) {
             break;
         }
 
+
+
         // Libérer la mémoire allouée
-        //freeTree(tree.root);
+        freeTree(tree.root);
         // Créer un nouvel arbre pour le prochain mouvement
-        tree = createTree(map, available_moves,is_on_erg);
+        tree = createTree(map, available_moves,is_on_erg,robot);
     }
 
     // Libérer la mémoire allouée
-    //freeTree(tree.root);
+    freeTree(tree.root);
     double tempsFinal = clock();
     double tempsTotal = tempsFinal-tempsInitial;
     printf("La fonction Play prend %.6f millisecondes\n", (tempsTotal));

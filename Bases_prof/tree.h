@@ -16,7 +16,7 @@ typedef struct s_tree
     int height;
 } t_tree;
 
-t_tree createTree(t_map map,int,int);
+t_tree createTree(t_map map,int,int,t_localisation);
 t_node *searchNode(t_tree tree, t_localisation loc);
 void insertInTree(t_node *nd, int move, t_map map,int);
 void completeTree (t_tree *, t_map map, int);
