@@ -5,6 +5,7 @@
 #ifndef UNTITLED1_LOC_H
 #define UNTITLED1_LOC_H
 
+
 /**
  * @brief Enum for the orientation of the robot (NORTH, EAST, SOUTH, WEST)
  */
@@ -79,5 +80,7 @@ t_position UP(t_position);
  * @return the DOWN position
  */
 t_position DOWN(t_position);
+
+
 
 #endif //UNTITLED1_LOC_H
