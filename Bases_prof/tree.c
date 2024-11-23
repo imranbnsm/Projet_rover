@@ -458,15 +458,15 @@ void freeTree(t_node *root) {
         return; // Rien à libérer
     }
 
-    // Libération récursive des enfants
     for (int i = 0; i < root->num_children; i++) {
         if (root->children[i] != NULL) {
-            freeTree(root->children[i]);
-            root->children[i] = NULL; // Éviter de conserver des pointeurs suspendus
+            if(root->num_children>0){
+                freeTree(root->children[i]);
+                root->children[i] = NULL;
+            }
         }
     }
 
-    // Libérer le tableau des enfants si alloué
     if (root->children != NULL) {
         free(root->children);
         root->children = NULL;
@@ -478,22 +478,21 @@ void freeTree(t_node *root) {
         root->move_interdit = NULL;
     }
 
-    // Libération du nœud lui-même
     free(root);
 }
 
 
 
-/*void freeTreeAuxi(t_node *node){
-    if (node==NULL){
+/*void freeTree(t_node *root){
+    if (root==NULL){
         return;
     }else {
-        for (int i = 0; i < node->num_children; i++) {
-            if (node->num_children > 0){
-                freeTreeAuxi(node->children[i]);
+        for (int i = 0; i < root->num_children; i++) {
+            if (root->num_children > 0){
+                freeTree(root->children[i]);
             }
         }
-        freeNode(node);
+        free(root);
         return;
     }
 }*/
@@ -541,7 +540,7 @@ void play(t_map map) {
         for (int j = 0; j<5; j++){
 
             if(leaf_node->cost != 0){
-                move(tree.root->loc,leaf_node->move);
+                move(tree.root->loc,path[j]->move);
             }else{
                 printf("C'est gagne !\n");
                 win = 1;
@@ -572,9 +571,10 @@ void play(t_map map) {
         break;
 
         // Libérer la mémoire allouée
-        //freeTree(tree.root);
-        debut = clock(); // temps de début
         freeTree(tree.root);
+
+        debut = clock(); // temps de début
+        //freeTree(tree.root);
         fin = clock(); // temps de fin
         temps = fin-debut;
         printf("La fonction freeTree prend %.6f millisecondes\n", temps);
@@ -591,7 +591,7 @@ void play(t_map map) {
 
     // Libérer la mémoire allouée
     //freeTree(tree.root);
-    freeTree(tree.root);
+    //freeTree(tree.root);
 
     double tempsFinal = clock();
     //double tempsTotal = tempsFinal-tempsInitial;
