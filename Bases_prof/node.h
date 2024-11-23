@@ -22,6 +22,4 @@ typedef struct s_node
 t_node *createNode(t_localisation loc, int cost, int depth);
 void addChild(t_node *parent, t_node *child);
 void displayNode(t_node *node);
-void freeNode(t_node *node);
-
 #endif //UNTITLED1_NODE_H

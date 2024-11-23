@@ -12,6 +12,7 @@
 
 t_move moves[] = { F_10, F_20, F_30, B_10, T_LEFT, T_RIGHT, U_TURN};
 t_move *movesrobot;
+int length_path=0;
 
 
 void getMoves(int is_on_erg) {
@@ -104,7 +105,7 @@ t_tree createTree(t_map map, int available_moves) {
 
     getMoves(is_on_erg); // Passer l'état de la case erg
 
-    printf("Robot initialise a la position (%d, %d) avec orientation %s.\n", robot.pos.x, robot.pos.y, getOrientation((robot.ori)));
+    printf("Robot initialise a la position (%d, %d) avec orientation %s.\n\n", robot.pos.x, robot.pos.y, getOrientation((robot.ori)));
 
     completeTree(&tree, map, available_moves);
 
@@ -290,46 +291,14 @@ void CheminRacineFeuilleAuxiliaire(t_node *node, t_node* target, t_node*** tab) 
 
 t_node **CheminRacineFeuille(t_tree tree, t_node* target) {
 
-   t_node **tab = (t_node **)malloc((tree.height + 1) * sizeof(t_node *));
-
+   t_node **tab = (t_node **)malloc((target->depth) * sizeof(t_node *));
+   length_path=target->depth;
    tab[0] = tree.root;
-   tab[tree.height] = target;
+   tab[length_path-1] = target;
 
     CheminRacineFeuilleAuxiliaire(tree.root, target, &tab);
    return tab;
 }
-
-
-
-
-
-/*void freeTree(t_node *root) {
-    if (root == NULL) {
-        return; // Rien à libérer
-    }
-
-    for (int i = 0; i < root->num_children; i++) {
-        if (root->children[i] != NULL) {
-            if(root->num_children>0){
-                freeTree(root->children[i]);
-                root->children[i] = NULL;
-            }
-        }
-    }
-
-    if (root->children != NULL) {
-        free(root->children);
-        root->children = NULL;
-    }
-
-    // Libérer le tableau des mouvements interdits si alloué
-    if (root->move_interdit != NULL) {
-        free(root->move_interdit);
-        root->move_interdit = NULL;
-    }
-
-    free(root);
-}*/
 
 
 char* getOrientation (int ori){
@@ -346,6 +315,7 @@ void freeTree(t_node *root){
             }
         }
         free(root->children);
+        //free(root->move_interdit);
         free(root);
         return;
     }
@@ -370,14 +340,12 @@ void play(t_map map) {
 
         available_moves = 5;
 
-
-
         double debut = clock(); // temps de début
         // Trouver la feuille de plus bas coût et s'y déplacer
         t_node* leaf_node = SearchLeafMin(tree);
         double fin = clock(); // temps de fin
         double temps = fin-debut;
-        printf("La fonction SearchLeafMin prend %.6f millisecondes\n", temps);
+        printf("La fonction SearchLeafMin prend %.6f millisecondes\n\n", temps);
 
         if (leaf_node == NULL) {
             printf("Aucune feuille valide trouvee.\n");
@@ -385,16 +353,19 @@ void play(t_map map) {
         }
 
         // Afficher le mouvement choisi
-        printf("Position de la feuille minimale trouvee (x,y): %d %d\n",leaf_node->loc.pos.x,leaf_node->loc.pos.y);
+        printf("Position de la feuille minimale trouvee (x,y): %d,%d\n",leaf_node->loc.pos.x,leaf_node->loc.pos.y);
 
         // Mettre à jour la position du robot en fonction du mouvement choisi
         t_node **path = CheminRacineFeuille(tree,leaf_node);
 
-        for (int j = 0; j<5; j++){
+        for (int j = 0; j<length_path; j++){
 
-            if(leaf_node->cost != 0){
+            if(path[j]->cost != 0){
                 move(tree.root->loc,path[j]->move);
+                printf("Case numero %d: %d,%d\n",j,path[j]->loc.pos.x,path[j]->loc.pos.y);
+                printf("Mouvement de la case numero %d: %s\n\n",j, getMoveAsString(path[j]->move));
             }else{
+                printf("Case numero %d: %d,%d\n",j,path[j]->loc.pos.x,path[j]->loc.pos.y);
                 printf("C'est gagne !\n");
                 win = 1;
                 break;
@@ -407,47 +378,27 @@ void play(t_map map) {
             break;
         }
 
-        // Vérifier le type de terrain actuel
-        int terrain_type = map.soils[tree.root->loc.pos.y][tree.root->loc.pos.x];
-        int is_on_erg = (terrain_type == 2);
-
-        // Gérer les conséquences si le robot commence sur une case erg
-        if (is_on_erg) {
-            printf("Le Robot commence sur un erg.\n");
-            break;
-        }
-
         if (map.soils[tree.root->loc.pos.y][tree.root->loc.pos.x] == 3){
             available_moves = 4;
         }
 
-        freeTree(tree.root);
-
-        break;
-
-        // Libérer la mémoire allouée
-
-
         debut = clock(); // temps de début
-        //freeTree(tree.root);
+        freeTree(tree.root);
         fin = clock(); // temps de fin
         temps = fin-debut;
-        printf("La fonction freeTree prend %.6f millisecondes\n", temps);
+        printf("La fonction freeTree prend %.6f millisecondes\n\n", temps);
 
         // Créer un nouvel arbre pour le prochain mouvement
-        //tree = createTree(map, available_moves,is_on_erg);
         debut = clock(); // temps de début
-        //tree = createTree(map, available_moves,is_on_erg);
+        tree = createTree(map, available_moves);
         fin = clock(); // temps de fin
         temps = fin-debut;
-        printf("La fonction CreateTree prend %.6f millisecondes\n", temps);
+        printf("La fonction CreateTree prend %.6f millisecondes\n\n", temps);
     }
 
-
-    // Libérer la mémoire allouée
-    //freeTree(tree.root);
+    freeTree(tree.root);
 
     double tempsFinal = clock();
-    //double tempsTotal = tempsFinal-tempsInitial;
-    //printf("La fonction Play prend %.6f millisecondes\n", (tempsTotal));
+    double tempsTotal = tempsFinal-tempsInitial;
+    printf("La fonction Play prend %.6f millisecondes\n", (tempsTotal));
 }
