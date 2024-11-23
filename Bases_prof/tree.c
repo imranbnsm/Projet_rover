@@ -414,6 +414,7 @@ void freeTree(t_node *root) {
 
 
 void play(t_map map) {
+    double tempsInitial = clock();
     t_tree tree;
     t_node *leaf_node;
     t_localisation robot;
@@ -437,7 +438,13 @@ void play(t_map map) {
 
     while (1) {
         // Trouver la feuille de plus bas coût et s'y déplacer
+        
+        double debut = clock(); // temps de début
         leaf_node = SearchLeafMin(tree);
+        double fin = clock(); // temps de fin
+        double temps = fin-debut;
+        printf("La fonction SearchLeafMin prend %.6f millisecondes\n", temps);
+        
         if (leaf_node == NULL) {
             printf("Aucune feuille valide trouvée.\n");
             break;
@@ -497,11 +504,25 @@ void play(t_map map) {
         }
 
         // Libérer la mémoire allouée
+        debut = clock(); // temps de début
         freeTree(tree.root);
+        fin = clock(); // temps de fin
+        temps = fin-debut;
+        printf("La fonction freeTree prend %.6f millisecondes\n", temps);
+        
         // Créer un nouvel arbre pour le prochain mouvement
+        debut = clock(); // temps de début
         tree = createTree(map, available_moves,is_on_erg);
+        fin = clock(); // temps de fin
+        temps = fin-debut;
+        printf("La fonction CreateTree prend %.6f millisecondes\n", temps);
     }
+
 
     // Libérer la mémoire allouée
     freeTree(tree.root);
+
+    double tempsFinal = clock();
+    double tempsTotal = tempsFinal-tempsInitial;
+    printf("La fonction Play prend %.6f millisecondes\n", (tempsTotal));
 }
