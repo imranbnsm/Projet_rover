@@ -9,6 +9,7 @@
 #include <time.h>
 #include "map.h"
 #include "moves.h"
+#include <time.h>
 
 t_move moves[] = { F_10, F_20, F_30, B_10, T_LEFT, T_RIGHT, U_TURN};
 t_move *movesrobot;
@@ -338,12 +339,21 @@ void play(t_map map) {
     }
 
     // Créer l'arbre associé à sa position
+    double debut = clock(); // temps de début
     tree = createTree(map, available_moves, initial_terrain_type == ERG); // Passer si sur erg
+    double fin = clock(); // temps de fin
+    double temps = fin-debut;
+    printf("La fonction CreateTree prend %.6f millisecondes\n", temps);
 
 
     while (1) {
         // Trouver la feuille de plus bas coût et s'y déplacer
+        debut = clock(); // temps de début
         t_node ** path = CheminRacineFeuille(tree);
+        fin = clock(); // temps de fin
+        temps = fin-debut;
+        printf("La fonction CheminRacineFeuille prend %.6f millisecondes\n", temps);
+        
         // Vérifier le type de terrain actuel
         int terrain_type = map.soils[robot.pos.y][robot.pos.x];
         int is_on_erg = (terrain_type == 2);
@@ -372,4 +382,7 @@ void play(t_map map) {
 
     // Libérer la mémoire allouée
     //freeTree(tree.root);
+    double tempsFinal = clock();
+    double tempsTotal = tempsFinal-tempsInitial;
+    printf("La fonction Play prend %.6f millisecondes\n", (tempsTotal));
 }
