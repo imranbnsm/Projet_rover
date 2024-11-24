@@ -43,6 +43,9 @@ Ensuite, le programme démarre le jeu en permettant au robot ROVER de rejoindre 
 - **`main.c`** : Contient le point d'entrée du programme et la logique principale.
 - **`tree.c`** : Contient les fonctions pour gérer les aspects liés aux arbres.
 - **`tree.h`** : Fichier d'en-tête pour les définitions liées aux arbres.
+- **`node.c`** : Contient les fonctions pour gérer les aspects liés aux noeuds.
+- **`node.h`** : Fichier d'en-tête pour les définitions liées aux noeuds.
+
 
 ## Auteurs
 
