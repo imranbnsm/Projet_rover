@@ -8,7 +8,7 @@ int main() {
     int n_map;
 
     do {
-        printf("Sur quelle carte voulez-vous jouer ? Entrez un numero entre 1 et 5:\n");
+        printf("Sur quelle carte voulez-vous jouer ? Entrez un numero entre 1 et 6:\n");
         scanf("%d", &n_map);
     }while(n_map<1 || n_map>6);
 
