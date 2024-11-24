@@ -8,9 +8,9 @@ int main() {
     int n_map;
 
     do {
-        printf("Sur quelle carte voulez-vous jouer ? Entrez un numero entre 1 et 6:\n");
+        printf("Sur quelle carte voulez-vous jouer ? Entrez un numero entre 1 et 5:\n");
         scanf("%d", &n_map);
-    }while(n_map<1 || n_map>6);
+    }while(n_map<1 || n_map>5);
 
     switch (n_map) {
 
@@ -28,9 +28,6 @@ int main() {
             break;
         case 5:
             map = createMapFromFile("..\\maps\\map5.map");
-            break;
-        case 6:
-            map = createMapFromFile("..\\maps\\map6.map");
             break;
         default:
             break;
