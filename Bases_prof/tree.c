@@ -134,13 +134,15 @@ void insertInTree(t_node *nd, int i_move, t_map map, int available_moves) {
             return;
         }
 
+        int profondeur = nd->depth;
+
         // Calculer la nouvelle position après le mouvement
         t_localisation new_pos = move(nd->loc, movesrobot[i_move]);
 
         // Vérifier que la nouvelle localisation est valide
         if (isValidLocalisation(new_pos.pos, map.x_max, map.y_max) && nd->cost < 10000) {
             int cost = map.costs[new_pos.pos.y][new_pos.pos.x];
-            t_node *nd_child = createNode(new_pos, cost, nd->depth + 1);
+            t_node *nd_child = createNode(new_pos, cost, profondeur + 1);
 
             if (nd_child == NULL) {
                 printf("Error: Failed to create child node.\n");
@@ -153,16 +155,16 @@ void insertInTree(t_node *nd, int i_move, t_map map, int available_moves) {
 
             // Propager les mouvements interdits vers l'enfant
             if (nd->move_interdit != NULL) {
-                for (int j = 0; j < nd->depth - 1; j++) {
-                    if (nd->depth >= 1) {
+                for (int j = 0; j < profondeur - 1; j++) {
+                    if (profondeur >= 1) {
                         nd_child->move_interdit[j] = nd->move_interdit[j];
                     }
                 }
             }
 
             // Ajouter le mouvement actuel à la liste des mouvements interdits
-            nd_child->move_interdit[nd->depth - 1] = i_move;
-            nd_child->depth = nd->depth + 1;
+            nd_child->move_interdit[profondeur - 1] = i_move;
+            nd_child->depth = profondeur + 1;
         }
     }
 }

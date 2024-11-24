@@ -1,17 +1,17 @@
-#include <stdio.h>          // Inclusion de la bibliothèque standard d'entrées/sorties pour printf, scanf, etc.
+#include <stdio.h>
 #include <unistd.h>         // Inclusion de la bibliothèque unistd pour utiliser la fonction sleep()
-#include "map.h"            // Inclusion du fichier d'en-tête "map.h" pour manipuler les cartes.
-#include "tree.h"           // Inclusion du fichier d'en-tête "tree.h" pour manipuler les arbres.
+#include "map.h"
+#include "tree.h"
 
 int main() {
-    t_map map;             // Déclaration de la variable 'map' de type 't_map', qui représente la carte de jeu.
+    t_map map;
     int n_map;             // Déclaration de la variable 'n_map', qui va stocker le numéro de la carte choisie par l'utilisateur.
 
     // Boucle do-while pour demander à l'utilisateur de choisir un numéro de carte entre 1 et 5, jusqu'à ce qu'une valeur valide soit entrée.
     do {
-        printf("Sur quelle carte voulez-vous jouer ? Entrez un numero entre 1 et 5:\n");   // Affiche un message demandant à l'utilisateur de choisir une carte.
-        scanf("%d", &n_map);  // Lecture de l'entrée de l'utilisateur, le numéro de carte.
-    } while (n_map < 1 || n_map > 5); // Tant que le numéro de carte est hors de la plage 1-5, répéter la demande.
+        printf("Sur quelle carte voulez-vous jouer ? Entrez un numero entre 1 et 5:\n");
+        scanf("%d", &n_map);
+    } while (n_map < 1 || n_map > 5);
 
     // Switch-case pour charger la carte correspondante selon le numéro choisi par l'utilisateur.
     switch (n_map) {
@@ -34,6 +34,8 @@ int main() {
         default:
             break;  // Cas par défaut (non utilisé ici, car l'entrée de l'utilisateur est vérifiée avant).
     }
+
+    printf("\n");
 
     // Affiche les dimensions de la carte créée (nombre de lignes et de colonnes).
     printf("Map created with dimensions %d x %d\n\n", map.y_max, map.x_max);
@@ -77,7 +79,7 @@ int main() {
 
     sleep(4);
 
-    play(map);         // Appel de la fonction 'play' pour démarrer le jeu avec la carte chargée (fonction non fournie dans ce code).
+    play(map);         // Appel de la fonction 'play' pour démarrer le jeu avec la carte chargée.
 
-    return 0;          // Retourne 0 pour indiquer que le programme s'est exécuté correctement.
+    return 0;
 }
