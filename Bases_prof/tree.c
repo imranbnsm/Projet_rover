@@ -48,6 +48,7 @@ void getMoves(int is_on_erg) {
     // Adapter les mouvements si le robot est sur un erg
     if (is_on_erg) {
         for (int i = 0; i < 9; i++) {
+            int r2 = rand() % 2;
             switch (movesrobot[i]) {
                 case F_10:
                     movesrobot[i] = NONE; // Ne fait rien
@@ -62,7 +63,12 @@ void getMoves(int is_on_erg) {
                     movesrobot[i] = NONE; // Ne fait rien
                     break;
                 case U_TURN:
-                    movesrobot[i] = T_RIGHT; // Ne pas tourner
+                    if(r2 == 0){
+                        movesrobot[i] = T_RIGHT;
+                    }else{
+                        movesrobot[i] = T_LEFT;
+                    }
+
                     break;
                 default:
                     break;
@@ -77,36 +83,44 @@ void getMoves(int is_on_erg) {
 t_position generateRandomPosition(t_map map) {
     t_position randomPos;
 
+    // Générer une position aléatoire valide (coût dans la carte entre 1 et 10000)
     do {
         randomPos.x = rand() % map.x_max;
         randomPos.y = rand() % map.y_max;
-    } while ( (map.costs[randomPos.y][randomPos.x] == 0 ) || (map.costs[randomPos.y][randomPos.x] > 10000 ) ); // Vérifier les coordonnées
+    } while ((map.costs[randomPos.y][randomPos.x] == 0) || (map.costs[randomPos.y][randomPos.x] > 10000));
 
     return randomPos;
 }
 
 t_orientation generateRandomOrientation() {
+    // Générer une orientation aléatoire (Nord, Est, Sud, Ouest)
     return (t_orientation)(rand() % 4);
 }
 
 
-
 t_tree createTree(t_map map, int available_moves) {
-
     t_tree tree;
     t_localisation robot;
+
+    // Initialiser l'arbre avec le nombre de mouvements disponibles
     tree.height = available_moves;
+
+    // Générer une position et une orientation aléatoire pour le robot
     robot.pos = generateRandomPosition(map);
     robot.ori = generateRandomOrientation();
     int cost = map.costs[robot.pos.y][robot.pos.x];
-    tree.root = createNode(robot, cost, 0);
+    tree.root = createNode(robot, cost, 0); // Créer la racine de l'arbre
 
+    // Vérifier si le robot commence sur un erg
     int is_on_erg = (map.costs[robot.pos.y][robot.pos.x] == 2);
 
-    getMoves(is_on_erg); // Passer l'état de la case erg
+    // Générer les mouvements possibles en fonction du type de terrain
+    getMoves(is_on_erg);
 
+    // Afficher les informations initiales du robot
     printf("Robot initialise a la position (%d, %d) avec orientation %s.\n\n", robot.pos.x, robot.pos.y, getOrientation((robot.ori)));
 
+    // Compléter l'arbre avec les mouvements disponibles
     completeTree(&tree, map, available_moves);
 
     return tree;
@@ -115,13 +129,15 @@ t_tree createTree(t_map map, int available_moves) {
 
 void insertInTree(t_node *nd, int i_move, t_map map, int available_moves) {
     if (nd != NULL) {
-        // Vérifiez si l'indice de mouvement est valide
+        // Vérifier si la profondeur maximale de l'arbre a été atteinte
         if (nd->depth >= available_moves) {
             return;
         }
 
+        // Calculer la nouvelle position après le mouvement
         t_localisation new_pos = move(nd->loc, movesrobot[i_move]);
 
+        // Vérifier que la nouvelle localisation est valide
         if (isValidLocalisation(new_pos.pos, map.x_max, map.y_max) && nd->cost < 10000) {
             int cost = map.costs[new_pos.pos.y][new_pos.pos.x];
             t_node *nd_child = createNode(new_pos, cost, nd->depth + 1);
@@ -131,9 +147,11 @@ void insertInTree(t_node *nd, int i_move, t_map map, int available_moves) {
                 return;
             }
 
+            // Ajouter le nouveau noeud comme enfant du noeud actuel
             addChild(nd, nd_child);
             nd_child->move = movesrobot[i_move];
 
+            // Propager les mouvements interdits vers l'enfant
             if (nd->move_interdit != NULL) {
                 for (int j = 0; j < nd->depth - 1; j++) {
                     if (nd->depth >= 1) {
@@ -142,6 +160,7 @@ void insertInTree(t_node *nd, int i_move, t_map map, int available_moves) {
                 }
             }
 
+            // Ajouter le mouvement actuel à la liste des mouvements interdits
             nd_child->move_interdit[nd->depth - 1] = i_move;
             nd_child->depth = nd->depth + 1;
         }
@@ -150,61 +169,47 @@ void insertInTree(t_node *nd, int i_move, t_map map, int available_moves) {
 
 
 void completeTree(t_tree *tree, t_map map, int available_moves) {
-
     if (tree != NULL && tree->root != NULL) {
-
         t_node *nd = tree->root;
 
+        // Ajouter les enfants du noeud racine en fonction des mouvements disponibles
         for (int l = 0; l < 9; l++) {
-
             insertInTree(nd, l, map, available_moves);
-
         }
 
+        // Compléter récursivement l'arbre en parcourant les enfants
         for (int k = 0; k < nd->num_children; k++) {
-
             auxiCompleteTree(nd->children[k], map, available_moves);
-
         }
     }
 }
 
-
 void auxiCompleteTree(t_node *nd, t_map map, int available_moves) {
-
-    if (nd==NULL || nd->depth<1 || nd->depth==5){
-
+    if (nd == NULL || nd->depth < 1 || nd->depth == 5) {
         return;
-
-    }else {
-
+    } else {
+        // Ajouter les enfants en vérifiant les mouvements valides
         for (int i = 0; i < 9 - nd->depth; i++) {
-
             int valid_child = 1;
 
-            for (int j = 0; j < nd->depth -1 ; j++) {
-
-                if (i == nd->move_interdit[j]) {  // Vérifier que le mouvement n'est pas interdit movesrobots[]
-
+            // Vérifier si le mouvement est interdit
+            for (int j = 0; j < nd->depth - 1; j++) {
+                if (i == nd->move_interdit[j]) {
                     valid_child = 0;
                     break;
-
                 }
             }
 
+            // Si le mouvement est valide, ajouter l'enfant
             if (valid_child) {
-
-                insertInTree(nd, i, map,available_moves);
-
+                insertInTree(nd, i, map, available_moves);
             }
         }
 
+        // Compléter récursivement l'arbre pour les enfants
         for (int i = 0; i < nd->num_children; i++) {
-
             if (nd->children[i] != NULL) {
-
-                auxiCompleteTree(nd->children[i], map,available_moves);
-
+                auxiCompleteTree(nd->children[i], map, available_moves);
             }
         }
         return;
@@ -273,7 +278,7 @@ t_node *SearchLeafMin(t_tree tree) {
 }
 
 
-// chemin depuis la racine vers cette feuille.
+// Chemin depuis la racine vers cette feuille.
 
 void CheminRacineFeuilleAuxiliaire(t_node *node, t_node* target, t_node*** tab) {
     if (node == NULL) return;
@@ -315,7 +320,6 @@ void freeTree(t_node *root){
             }
         }
         free(root->children);
-        //free(root->move_interdit);
         free(root);
         return;
     }
