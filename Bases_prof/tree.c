@@ -331,14 +331,18 @@ void play(t_map map) {
     // Déterminez le nombre de mouvements disponibles
     int available_moves = 5; // Par défaut, 5 mouvements
 
+    printf("ETAPE 1\n\n");
+
     // Créer l'arbre associé à sa position
     t_tree tree = createTree(map, available_moves);
 
     int win = 0;
+    int nb_phases = 1;
 
     while (1) {
 
         available_moves = 5;
+        nb_phases++;
 
         double debut = clock(); // temps de début
         // Trouver la feuille de plus bas coût et s'y déplacer
@@ -353,10 +357,12 @@ void play(t_map map) {
         }
 
         // Afficher le mouvement choisi
-        printf("Position de la feuille minimale trouvee (x,y): %d,%d\n",leaf_node->loc.pos.x,leaf_node->loc.pos.y);
+        printf("Position de la feuille minimale trouvee (x,y): %d,%d\n\n",leaf_node->loc.pos.x,leaf_node->loc.pos.y);
 
         // Mettre à jour la position du robot en fonction du mouvement choisi
         t_node **path = CheminRacineFeuille(tree,leaf_node);
+
+        printf("Chemin vers la feuille minimale :\n");
 
         for (int j = 0; j<length_path; j++){
 
@@ -367,6 +373,7 @@ void play(t_map map) {
             }else{
                 printf("Case numero %d: %d,%d\n",j,path[j]->loc.pos.x,path[j]->loc.pos.y);
                 printf("C'est gagne !\n");
+                printf("ROVER a atteint la base en %d phases.\n\n",nb_phases-1);
                 win = 1;
                 break;
             }
@@ -386,7 +393,9 @@ void play(t_map map) {
         freeTree(tree.root);
         fin = clock(); // temps de fin
         temps = fin-debut;
-        printf("La fonction freeTree prend %.6f millisecondes\n\n", temps);
+        printf("La fonction freeTree prend %.6f millisecondes\n\n\n\n", temps);
+
+        printf("ETAPE %d\n\n",nb_phases);
 
         // Créer un nouvel arbre pour le prochain mouvement
         debut = clock(); // temps de début
