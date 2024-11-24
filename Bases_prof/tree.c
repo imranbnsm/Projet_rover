@@ -1,7 +1,7 @@
 //
 // Created by Imran on 10/11/2024.
 //
-
+#include <unistd.h>
 #include <stdio.h>
 #include "tree.h"
 #include "loc.h"
@@ -398,6 +398,8 @@ void play(t_map map) {
         fin = clock(); // temps de fin
         temps = fin-debut;
         printf("La fonction freeTree prend %.6f millisecondes\n\n\n\n", temps);
+
+        sleep(2);
 
         printf("ETAPE %d\n\n",nb_phases);
 

@@ -36,7 +36,7 @@ int main() {
     }
 
     // Affiche les dimensions de la carte créée (nombre de lignes et de colonnes).
-    printf("Map created with dimensions %d x %d\n", map.y_max, map.x_max);
+    printf("Map created with dimensions %d x %d\n\n", map.y_max, map.x_max);
 
     // Affiche le contenu de la carte (les valeurs dans 'soils') sous forme de tableau 2D.
     for (int i = 0; i < map.y_max; i++)  // Parcourt chaque ligne de la carte.
@@ -48,9 +48,14 @@ int main() {
         printf("\n");  // Saut de ligne après chaque ligne de la carte.
     }
 
-    sleep(5);
+    printf("\n\n");
+
+    sleep(2);
 
     // Affiche les coûts associés à chaque case de la carte, formaté pour être aligné à gauche avec 5 espaces.
+
+    printf("Carte avec couts associes a chaque case:\n\n");
+
     for (int i = 0; i < map.y_max; i++)  // Parcourt chaque ligne du tableau des coûts.
     {
         for (int j = 0; j < map.x_max; j++)  // Parcourt chaque colonne du tableau des coûts.
@@ -60,11 +65,17 @@ int main() {
         printf("\n");  // Saut de ligne après chaque ligne des coûts.
     }
 
-    sleep(5);
+    printf("\n\n");
 
-    displayMap(map);   // Appel de la fonction 'displayMap' pour afficher la carte visuellement (fonction non fournie dans ce code).
+    sleep(4);
 
-    sleep(5);
+    printf("Carte visuelle :\n\n");
+
+    displayMap(map);   // Appel de la fonction 'displayMap' pour afficher la carte visuellement.
+
+    printf("\n");
+
+    sleep(4);
 
     play(map);         // Appel de la fonction 'play' pour démarrer le jeu avec la carte chargée (fonction non fournie dans ce code).
 
