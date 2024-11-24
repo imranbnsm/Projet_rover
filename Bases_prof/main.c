@@ -1,4 +1,5 @@
 #include <stdio.h>          // Inclusion de la bibliothèque standard d'entrées/sorties pour printf, scanf, etc.
+#include <unistd.h>         // Inclusion de la bibliothèque unistd pour utiliser la fonction sleep()
 #include "map.h"            // Inclusion du fichier d'en-tête "map.h" pour manipuler les cartes.
 #include "tree.h"           // Inclusion du fichier d'en-tête "tree.h" pour manipuler les arbres.
 
@@ -47,6 +48,8 @@ int main() {
         printf("\n");  // Saut de ligne après chaque ligne de la carte.
     }
 
+    sleep(5);
+
     // Affiche les coûts associés à chaque case de la carte, formaté pour être aligné à gauche avec 5 espaces.
     for (int i = 0; i < map.y_max; i++)  // Parcourt chaque ligne du tableau des coûts.
     {
@@ -57,7 +60,11 @@ int main() {
         printf("\n");  // Saut de ligne après chaque ligne des coûts.
     }
 
+    sleep(5);
+
     displayMap(map);   // Appel de la fonction 'displayMap' pour afficher la carte visuellement (fonction non fournie dans ce code).
+
+    sleep(5);
 
     play(map);         // Appel de la fonction 'play' pour démarrer le jeu avec la carte chargée (fonction non fournie dans ce code).
 
