@@ -31,6 +31,7 @@ int main() {
             break;
         case 6:
             map = createMapFromFile("..\\maps\\map6.map");
+            break;
         default:
             break;
     }
