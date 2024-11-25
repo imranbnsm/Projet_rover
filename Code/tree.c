@@ -343,6 +343,7 @@ void play(t_map map) {
     t_tree tree = createTree(map, available_moves);
 
     int win = 0;
+    int loose = 0;
     int nb_phases = 1;
 
     while (1) {
@@ -376,6 +377,9 @@ void play(t_map map) {
                 move(tree.root->loc,path[j]->move);
                 printf("Case numero %d: %d,%d\n",j,path[j]->loc.pos.x,path[j]->loc.pos.y);
                 printf("Mouvement de la case numero %d: %s\n\n",j, getMoveAsString(path[j]->move));
+            }else if(!isValidLocalisation(path[j]->loc.pos,map.x_max,map.y_max)){
+                loose = 1;
+                break;
             }else{
                 printf("Case numero %d: %d,%d\n",j,path[j]->loc.pos.x,path[j]->loc.pos.y);
                 printf("C'est gagne !\n");
@@ -384,6 +388,11 @@ void play(t_map map) {
                 break;
             }
 
+        }
+
+        if(loose){
+            printf("ROVER est sorti de la carte, c'est perdu !\n");
+            break;
         }
 
         // Vérifier si le robot a atteint la base
