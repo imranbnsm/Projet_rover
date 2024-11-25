@@ -112,7 +112,7 @@ t_tree createTree(t_map map, int available_moves) {
     tree.root = createNode(robot, cost, 0); // Créer la racine de l'arbre
 
     // Vérifier si le robot commence sur un erg
-    int is_on_erg = (map.costs[robot.pos.y][robot.pos.x] == 2);
+    int is_on_erg = (map.soils[robot.pos.y][robot.pos.x] == 2);
 
     // Générer les mouvements possibles en fonction du type de terrain
     getMoves(is_on_erg);
