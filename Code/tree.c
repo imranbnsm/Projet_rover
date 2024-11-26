@@ -377,12 +377,14 @@ void play(t_map map) {
             if(path[j]->cost != 0){
                 robot=move(robot,path[j]->move);
                 printf("Case numero %d: %d,%d\n",j,path[j]->loc.pos.x,path[j]->loc.pos.y);
+                printf("Cout de la case %d: %d\n",j,path[j]->cost);
                 printf("Mouvement de la case numero %d: %s\n\n",j, getMoveAsString(path[j]->move));
             }else if(!isValidLocalisation(path[j]->loc.pos,map.x_max,map.y_max)){
                 loose = 1;
                 break;
             }else{
-                printf("Case numero %d: %d,%d\n",j,path[j]->loc.pos.x,path[j]->loc.pos.y);
+                printf("Case numero %d: %d,%d cout : %d\n",j,path[j]->loc.pos.x,path[j]->loc.pos.y,path[j]->cost);
+                printf("Cout de la case %d: %d\n",j,path[j]->cost);
                 printf("C'est gagne !\n");
                 printf("ROVER a atteint la base en %d phases.\n\n",nb_phases-1);
                 win = 1;
