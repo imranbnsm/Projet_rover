@@ -98,16 +98,14 @@ t_orientation generateRandomOrientation() {
 }
 
 
-t_tree createTree(t_map map, int available_moves) {
+t_tree createTree(t_map map, int available_moves, t_localisation robot) {
     t_tree tree;
-    t_localisation robot;
 
     // Initialiser l'arbre avec le nombre de mouvements disponibles
     tree.height = available_moves;
 
     // Générer une position et une orientation aléatoire pour le robot
-    robot.pos = generateRandomPosition(map);
-    robot.ori = generateRandomOrientation();
+
     int cost = map.costs[robot.pos.y][robot.pos.x];
     tree.root = createNode(robot, cost, 0); // Créer la racine de l'arbre
 
@@ -336,11 +334,14 @@ void play(t_map map) {
 
     // Déterminez le nombre de mouvements disponibles
     int available_moves = 5; // Par défaut, 5 mouvements
+    t_localisation robot;
+    robot.pos = generateRandomPosition(map);
+    robot.ori = generateRandomOrientation();
 
     printf("ETAPE 1\n\n");
 
     // Créer l'arbre associé à sa position
-    t_tree tree = createTree(map, available_moves);
+    t_tree tree = createTree(map, available_moves, robot);
 
     int win = 0;
     int loose = 0;
@@ -374,7 +375,7 @@ void play(t_map map) {
         for (int j = 0; j<length_path; j++){
 
             if(path[j]->cost != 0){
-                move(tree.root->loc,path[j]->move);
+                robot=move(robot,path[j]->move);
                 printf("Case numero %d: %d,%d\n",j,path[j]->loc.pos.x,path[j]->loc.pos.y);
                 printf("Mouvement de la case numero %d: %s\n\n",j, getMoveAsString(path[j]->move));
             }else if(!isValidLocalisation(path[j]->loc.pos,map.x_max,map.y_max)){
@@ -416,7 +417,7 @@ void play(t_map map) {
 
         // Créer un nouvel arbre pour le prochain mouvement
         debut = clock(); // temps de début
-        tree = createTree(map, available_moves);
+        tree = createTree(map, available_moves, robot);
         fin = clock(); // temps de fin
         temps = fin-debut;
         printf("La fonction CreateTree prend %.6f millisecondes\n\n", temps);
@@ -425,6 +426,6 @@ void play(t_map map) {
     freeTree(tree.root);
 
     double tempsFinal = clock();
-    double tempsTotal = tempsFinal-tempsInitial;
+    double tempsTotal = tempsFinal-tempsInitial-2000*(nb_phases-2);
     printf("La fonction Play prend %.6f millisecondes\n", (tempsTotal));
 }

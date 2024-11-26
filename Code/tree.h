@@ -18,7 +18,7 @@ typedef struct s_tree
  * @param available_moves Nombre maximum de mouvements disponibles.
  * @return L'arbre créé avec la position initiale du robot.
  */
-t_tree createTree(t_map map, int available_moves);
+t_tree createTree(t_map map, int available_moves, t_localisation robot);
 
 /**
  * @brief Recherche un noeud dans l'arbre en fonction de sa localisation.
